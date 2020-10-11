@@ -1,8 +1,8 @@
 {
-  "name": "chrt",
-  "version": "1.0.0",
-  "description": "small atomic charting components",
-  "main": "dist/chrt.js",
+  "name": "chrt-core",
+  "version": "0.0.0",
+  "description": "Core components of Chrt",
+  "main": "dist/chrt-core.js",
   "module": "src/index.j",
   "watch": {
     "build": {
