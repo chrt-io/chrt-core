@@ -8,7 +8,7 @@ import * as meta from "./package.json";
 const config = {
   input: "src/index.js",
   output: {
-    file: `dist/chrt.js`,
+    file: `dist/${meta.name}.js`,
     name: "chrt",
     format: "umd",
     indent: false,
