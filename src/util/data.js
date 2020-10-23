@@ -1,9 +1,10 @@
 import {hasData} from '~/helpers';
 
 export default function (data, accessor) {
-  //console.log('---------------> data', data, accessor, this);
+  console.log('---------------> data', data, accessor, this);
   if (!data) {
-    return hasData(this) ? this._data : this;
+    console.log('NO DATA return', hasData(this), this._data, hasData(this) ? this._data : this)
+    return hasData(this) ? (this._data || []) : this;
   }
   // TODO: not sure what this is doing...
   if(!hasData(this)) {
@@ -31,7 +32,7 @@ export default function (data, accessor) {
     return accessorFunction(d, i, arr);
   }) : data;
 
-  // console.log('DATA', this._data)
+  console.log('DATA', this._data)
 
   return this;
 }

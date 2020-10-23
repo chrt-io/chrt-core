@@ -1,7 +1,8 @@
 import { uuid, hasData } from '~/helpers';
 export default function add(obj) {
   const id = uuid();
-  // // console.log('adding', obj.type, id);
+  // console.log('adding', obj.type, id);
+  console.log('HERE!!!', obj.hasData(), obj.data())
   obj
     .id(id)
     .parent(this)
