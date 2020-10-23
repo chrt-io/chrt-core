@@ -46,7 +46,7 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   }
   // // console.log('NEED TO CHECK FOR objects', this.objects)
   this.objects.forEach(obj => {
-    // // console.log('setting domain', obj.id())
+    console.log('setting domain', obj)
     if (obj._data) {
       obj._data.forEach(d => {
         domainExtent[0] =

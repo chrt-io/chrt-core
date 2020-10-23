@@ -1,7 +1,7 @@
 import {hasData} from '~/helpers';
 
 export default function (data, accessor) {
-  console.log('---------------> data', data, accessor, this);
+  //console.log('---------------> data', data, accessor, this);
   if (!data) {
     return hasData(this) ? this._data : this;
   }
@@ -31,7 +31,7 @@ export default function (data, accessor) {
     return accessorFunction(d, i, arr);
   }) : data;
 
-  console.log('DATA', this._data)
+  // console.log('DATA', this._data)
 
   return this;
 }

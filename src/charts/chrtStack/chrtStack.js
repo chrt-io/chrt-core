@@ -7,30 +7,32 @@ function chrtStack() {
 
   chrtGeneric.call(this);
   this.type = 'stack';
+  this._grouped = 1;
+  this._groupIndex = 0;
 
-  this._data = {};
+  this._dataMap = {};
 
   this.add = (chart) => {
     console.log('chrtStack','add',chart)
-    chart._stacked = true;
+    chart._stacked = this;
     add.call(this, chart);
     console.log('add', this.parentNode)
 
     const dataFunction = chart.data;
     chart.data = (data, accessor) => {
-      console.log('chrtStack','data!', this._data)
+      console.log('chrtStack','data!', this._dataMap)
       if(!isNull(data)) {
           data = data.map(d => {
-            if(!this._data[d.x]) {
-              this._data[d.x] = {
+            if(!this._dataMap[d.x]) {
+              this._dataMap[d.x] = {
                 x: d.x,
                 values: [],
               }
             }
-            this._data[d.x].values.push(d);
-            const y0 = !isNull(this._data[d.x].y0) ? this._data[d.x].y0 : 0;
-            this._data[d.x].y0 = y0 + d.y;
-            console.log(this._data[d.x].y0,'->', y0,'+', d.y)
+            this._dataMap[d.x].values.push(d);
+            const y0 = !isNull(this._dataMap[d.x].y0) ? this._dataMap[d.x].y0 : 0;
+            this._dataMap[d.x].y0 = y0 + d.y;
+            // console.log(this._dataMap[d.x].y0,'->', y0,'+', d.y)
             return Object.assign({}, d, { stacked_y: y0 + d.y, y0 })
           })
       }
@@ -45,17 +47,17 @@ function chrtStack() {
 
   this.draw = () => {
     console.log('chrtStack', 'draw', this.objects);
-
+    const parentNode = this.parentNode.type === 'group' ? this.parentNode.parentNode : this.parentNode;
     this.objects.forEach(obj => {
-      if(this.parentNode.objects.map(d => d._id).indexOf(obj._id) === -1) {
-        this.parentNode.add(obj);
+      if(parentNode.objects.map(d => d._id).indexOf(obj._id) === -1) {
+        parentNode.add(obj);
       }
       console.log('--->', obj)
     })
 
     this.objects.forEach(obj => obj.draw())
 
-    return this.parentNode;
+    return parentNode;
   }
 }
 
