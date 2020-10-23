@@ -34,7 +34,7 @@ export default [
     ...config,
     output: {
       ...config.output,
-      file: `dist/chrt.min.js`
+      file: `dist/${meta.name}.min.js`
     },
     plugins: [
       ...config.plugins,

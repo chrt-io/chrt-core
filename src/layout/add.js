@@ -6,7 +6,7 @@ export default function add(obj) {
     .id(id)
     .parent(this)
     .node(this.currentNode)
-    .data(obj.data() || this._orginalData, obj.accessor() || this._accessor)
+    .data(obj.hasData() ? obj.data() : this._orginalData, obj.accessor() || this._accessor)
     // .data.apply(
     //   COMPONENTS_W_DATA.indexOf(obj.type) === -1 ? null : obj,
     //   [obj.data() || this._orginalData, obj.accessor() || this._accessor]

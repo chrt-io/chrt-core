@@ -33,13 +33,13 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
   if(!fixedDomain || (!domainExtent.length || (domainExtent[0] !== currentDomain[0] || domainExtent[1] !== currentDomain[1]))) {
-    // console.log('CALCULATE DOMAIN BASED ON THE DATA', name)
+    // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, this._data)
     this._data.forEach(d => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
       domainExtent[0] =
-        domainExtent[0] == null ? d[name] : Math.min(d[name], domainExtent[0]);
+        domainExtent[0] == null ? d[name] : Math.min(...[d[name], domainExtent[0], d[`stacked_${name}`]].filter(value => !isNull(value)));
       domainExtent[1] =
-        domainExtent[1] == null ? d[name] : Math.max(d[name], domainExtent[1]);
+        domainExtent[1] == null ? d[name] : Math.max(...[d[name], domainExtent[1], d[`stacked_${name}`]].filter(value => !isNull(value)));
     });
 
     // console.log('DOMAIN EXTENT', name, domainExtent)
@@ -52,11 +52,11 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
         domainExtent[0] =
           domainExtent[0] == null
             ? d[obj.fields[name]]
-            : Math.min(d[obj.fields[name]], domainExtent[0]);
+            : Math.min(...[d[obj.fields[name]], domainExtent[0], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
         domainExtent[1] =
           domainExtent[1] == null
             ? d[obj.fields[name]]
-            : Math.max(d[obj.fields[name]], domainExtent[1]);
+            : Math.max(...[d[obj.fields[name]], domainExtent[1], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
       });
     }
   });
