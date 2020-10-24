@@ -2,7 +2,7 @@ import { uuid, hasData } from '~/helpers';
 export default function add(obj) {
   const id = uuid();
   // console.log('adding', obj.type, id);
-  console.log('HERE!!!', obj.hasData(), obj.data())
+  // console.log('HERE!!!', obj.hasData(), obj.data())
   obj
     .id(id)
     .parent(this)
@@ -15,8 +15,10 @@ export default function add(obj) {
     .render();
   this.objects.push(obj);
 
-  //if (COMPONENTS_W_DATA.indexOf(obj.type) === -1) {
-  if(hasData(obj) || obj.updater) {
+  // TODO: verify if the obj.updater condition is needed
+
+  //if(hasData(obj) || obj.updater) {
+  if(hasData(obj)) {
     // // console.log('BECAUSE THE OBJ HAS DATA > UPDATE')
     return this.update();
   }

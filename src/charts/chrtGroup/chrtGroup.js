@@ -3,13 +3,13 @@ import { add } from '../util';
 import chrtGeneric from '../chrtGeneric';
 
 function chrtGroup() {
-  console.log('chrtGroup')
+  //console.log('chrtGroup')
 
   chrtGeneric.call(this);
   this.type = 'group';
 
   this.add = (chart) => {
-    console.log('chrtGroup','add',chart)
+    // console.log('chrtGroup','add',chart)
     add.call(this, chart);
 
     chart._groupIndex = this.objects.length - 1;

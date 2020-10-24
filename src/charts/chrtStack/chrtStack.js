@@ -3,7 +3,7 @@ import { add } from '../util';
 import chrtGeneric from '../chrtGeneric';
 
 function chrtStack() {
-  console.log('chrtStack')
+  //console.log('chrtStack')
 
   chrtGeneric.call(this);
   this.type = 'stack';
@@ -13,14 +13,14 @@ function chrtStack() {
   this._dataMap = {};
 
   this.add = (chart) => {
-    console.log('chrtStack','add',chart)
+    // console.log('chrtStack','add',chart)
     chart._stacked = this;
     add.call(this, chart);
-    console.log('add', this.parentNode)
+    // console.log('add', this.parentNode)
 
     const dataFunction = chart.data;
     chart.data = (data, accessor) => {
-      console.log('chrtStack','data!', this._dataMap)
+      // console.log('chrtStack','data!', this._dataMap)
       if(!isNull(data)) {
           data = data.map(d => {
             if(!this._dataMap[d.x]) {
@@ -36,7 +36,7 @@ function chrtStack() {
             return Object.assign({}, d, { stacked_y: y0 + d.y, y0 })
           })
       }
-      console.log('CALLING DATA ON',chart,'WITH', data)
+      // console.log('CALLING DATA ON',chart,'WITH', data)
       return dataFunction.call(chart, data, accessor);
     }
 
@@ -46,13 +46,13 @@ function chrtStack() {
   }
 
   this.draw = () => {
-    console.log('chrtStack', 'draw', this.objects);
+    // console.log('chrtStack', 'draw', this.objects);
     const parentNode = this.parentNode.type === 'group' ? this.parentNode.parentNode : this.parentNode;
     this.objects.forEach(obj => {
       if(parentNode.objects.map(d => d._id).indexOf(obj._id) === -1) {
         parentNode.add(obj);
       }
-      console.log('--->', obj)
+      // console.log('--->', obj)
     })
 
     this.objects.forEach(obj => obj.draw())

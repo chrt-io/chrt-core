@@ -2,7 +2,7 @@ import { createSVG as create } from '../../layout';
 import { hasData } from '~/helpers';
 
 export default function render() {
-  console.log('RENDER', this)
+  // console.log('RENDER', this)
   this.g = create('g');
   if(this._id) {
     this.g.setAttribute('id', this._id);

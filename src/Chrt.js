@@ -10,7 +10,7 @@ import {
   setPadding,
 } from './layout';
 import { scaleLinear, scaleLog } from './scales';
-import { isNull } from './helpers';
+import { isNull, arraysEqual } from './helpers';
 
 export function Chrt(_data = [], _node) {
   // // console.log('CHRT', _data);
@@ -44,23 +44,39 @@ export function Chrt(_data = [], _node) {
   this.objects = [];
 
   this.scaleLinear = (name, domain, range) => {
+    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
+    const oldRange = this.scales[name] ? this.scales[name].range : [];
     scaleLinear.apply(this, [
       name,
       domain, // || (this._data.length ? domain : null), // [0, 10] -> this messes up with the later assignement of data
       range
     ]);
-    this.objects.forEach(obj => obj.update());
+    if(
+      !arraysEqual(oldDomain, this.scales[name].domain)
+      ||
+      !arraysEqual(oldRange, this.scales[name].range)
+    ) {
+        this.objects.forEach(obj => obj.update());
+      }
     return this;
   };
 
   this.scaleLog = (name, domain, range, transformation = 'log10') => {
+    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
+    const oldRange = this.scales[name] ? this.scales[name].range : [];
     scaleLog.apply(this, [
       name,
       this._data.length ? domain : [1, 10],
       range,
       transformation
     ]);
-    this.objects.forEach(obj => obj.update());
+    if(
+      !arraysEqual(oldDomain, this.scales[name].domain)
+      ||
+      !arraysEqual(oldRange, this.scales[name].range)
+    ) {
+        this.objects.forEach(obj => obj.update());
+      }
     return this;
   };
 
@@ -112,12 +128,42 @@ export function Chrt(_data = [], _node) {
 
   this.update = () => {
     // console.log('UPDATE',this._data)
+    // const oldDomain = {
+    //   x: this.scales.x ? this.scales.x.domain : [],
+    //   y: this.scales.y ? this.scales.y.domain : [],
+    // }
+    // const oldRange = {
+    //   x: this.scales.x ? this.scales.x.range : [],
+    //   y: this.scales.y ? this.scales.y.range : [],
+    // }
     this.x();
     this.y(
       null,
       null,
       this.scales.y ? { transformation: this.scales.y.getTransformation() } : {}
     );
+
+    // if(
+    //   !arraysEqual(oldDomain.x, this.scales.x.domain)
+    //   ||
+    //   !arraysEqual(oldDomain.y, this.scales.y.domain)
+    //   ||
+    //   !arraysEqual(oldRange.x, this.scales.x.range)
+    //   ||
+    //   !arraysEqual(oldRange.y, this.scales.y.range)
+    // ) {
+    //   console.log('DIFFERENT!')
+    //   console.log('domain x', oldDomain.x, this.scales.x.domain)
+    //   console.log('domain y', oldDomain.y, this.scales.y.domain)
+    //   console.log('range x', oldRange.x, this.scales.x.range)
+    //   console.log('range y', oldRange.y, this.scales.y.range)
+    //     this.objects.forEach(obj => obj.update());
+    // } else {
+    //   console.log('SAME!')
+    //   this.objects.forEach(obj => obj.update());
+    //   // console.log(oldDomain.x, this.scales.x.domain)
+    //   // console.log(oldDomain.y, this.scales.y.domain)
+    // }
     this.objects.forEach(obj => obj.update());
     return this;
   };

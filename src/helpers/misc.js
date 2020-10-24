@@ -21,3 +21,16 @@ export function hasData(obj) {
 export function isInfinity(value) {
   return !isFinite(value);
 }
+
+export function arraysEqual(array1, array2) {
+    if(!Array.isArray(array1) || !Array.isArray(array2)) {
+      console.warn('arraysEqual(array1, array2)', 'Both parameters should be arrays');
+      return false;
+    }
+    if(array1.length === 0 && array2.length === 0) {
+      return true;
+    }
+    return (array1.length == array2.length) && array1.every(function(element, index) {
+      return element === array2[index];
+    });
+}
