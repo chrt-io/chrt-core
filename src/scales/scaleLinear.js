@@ -8,7 +8,8 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // console.log(`scale(${name}, ${domain}, range = ${[0, DEFAULT_WIDTH]})`)
 
   const fixedDomain = domain || (this.scales[name] ? this.scales[name].fixedDomain : null);
-
+  const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
+  // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if(!domain) {
     //domain = [0, 1]; // not sure anymore about this
   }
@@ -19,7 +20,7 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // // console.log(name,'RANGE',range)
 
   const currentDomain = (this.scales[name] && !this.scales[name].isLog())? this.scales[name].domain : [];
-  let domainExtent = fixedDomain || domain || currentDomain;
+  let domainExtent = copyOfFixedDomain || domain || currentDomain;
 
 
 
@@ -32,7 +33,8 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
 
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
-  if(!fixedDomain || (!domainExtent.length || (domainExtent[0] !== currentDomain[0] || domainExtent[1] !== currentDomain[1]))) {
+  if(isNull(fixedDomain) || (!domainExtent || !domainExtent.length || (domainExtent[0] !== currentDomain[0] || domainExtent[1] !== currentDomain[1]))) {
+  // if(isNull(fixedDomain)) {
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, this._data)
     this._data.forEach(d => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
@@ -43,23 +45,27 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     });
 
     // console.log('DOMAIN EXTENT', name, domainExtent)
+
+    // console.log('CALCULATE DOMAIN BASED ON OBJECTS', this.objects)
+    this.objects.forEach(obj => {
+      // console.log('setting domain', obj)
+      if (obj._data) {
+        obj._data.forEach(d => {
+          domainExtent[0] =
+            domainExtent[0] == null
+              ? d[obj.fields[name]]
+              : Math.min(...[d[obj.fields[name]], domainExtent[0], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
+          domainExtent[1] =
+            domainExtent[1] == null
+              ? d[obj.fields[name]]
+              : Math.max(...[d[obj.fields[name]], domainExtent[1], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
+        });
+      }
+    });
+
+    // console.log('DOMAIN EXTENT', name, domainExtent)
   }
-  // // console.log('NEED TO CHECK FOR objects', this.objects)
-  this.objects.forEach(obj => {
-    // console.log('setting domain', obj)
-    if (obj._data) {
-      obj._data.forEach(d => {
-        domainExtent[0] =
-          domainExtent[0] == null
-            ? d[obj.fields[name]]
-            : Math.min(...[d[obj.fields[name]], domainExtent[0], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
-        domainExtent[1] =
-          domainExtent[1] == null
-            ? d[obj.fields[name]]
-            : Math.max(...[d[obj.fields[name]], domainExtent[1], d[`stacked_${obj.fields[name]}`]].filter(value => !isNull(value)));
-      });
-    }
-  });
+
 
   // // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
 
@@ -67,14 +73,23 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   const eNumScale = new ExtendedWilkinson(domainExtent);
   // // console.log('E WILK', eNumScale.ticks())
   // re-assign domain based on, max/min of heckbert nice scale
-  //// // console.log(domainExtent[0],domainExtent[1],'after WILKINSON', eNumScale.getMin(), eNumScale.getMax())
-  if(!currentDomain) {
-    domainExtent[0] = eNumScale.getMin();
-    domainExtent[1] = eNumScale.getMax();
+  // console.log(domainExtent[0],domainExtent[1],'after WILKINSON', eNumScale.getMin(), eNumScale.getMax())
+
+  // TODO: not sure which one is best between the 2 following:
+  // if(!currentDomain) {
+  //   domainExtent[0] = eNumScale.getMin();
+  //   domainExtent[1] = eNumScale.getMax();
+  // }
+  // console.log('fixedDomain', fixedDomain);
+  if(isNull(fixedDomain)) {
+    // console.log('--->eNumScale',eNumScale.getMin(), eNumScale.getMax())
+    domainExtent[0] = !isNull(currentDomain[0]) ? Math.min(currentDomain[0], eNumScale.getMin()) : eNumScale.getMin();
+    domainExtent[1] = !isNull(currentDomain[1]) ? Math.max(currentDomain[1], eNumScale.getMax()) : eNumScale.getMax();
   }
 
+  // console.log('new domain is ', domainExtent)
 
-  // // console.log('AFTER WILK DOMAIN',  name, [...domainExtent])
+  // console.log('AFTER WILK DOMAIN',  name, [...domainExtent])
 
   const domainWidth = domainExtent[1] - domainExtent[0];
   const direction = range[1] >= range[0] ? 1 : -1;

@@ -152,19 +152,23 @@ export function Chrt(_data = [], _node) {
     //   ||
     //   !arraysEqual(oldRange.y, this.scales.y.range)
     // ) {
-    //   console.log('DIFFERENT!')
-    //   console.log('domain x', oldDomain.x, this.scales.x.domain)
-    //   console.log('domain y', oldDomain.y, this.scales.y.domain)
-    //   console.log('range x', oldRange.x, this.scales.x.range)
-    //   console.log('range y', oldRange.y, this.scales.y.range)
-    //     this.objects.forEach(obj => obj.update());
+    //   //console.log('DIFFERENT!')
+    //   // console.log('domain x', oldDomain.x, this.scales.x.domain)
+    //   // console.log('domain y', oldDomain.y, this.scales.y.domain)
+    //   // console.log('range x', oldRange.x, this.scales.x.range)
+    //   // console.log('range y', oldRange.y, this.scales.y.range)
+    //   //this.objects.forEach(obj => obj.update());
     // } else {
-    //   console.log('SAME!')
-    //   this.objects.forEach(obj => obj.update());
+    //   //console.log('SAME!')
+    //   //this.objects.forEach(obj => obj.update());
     //   // console.log(oldDomain.x, this.scales.x.domain)
     //   // console.log(oldDomain.y, this.scales.y.domain)
     // }
-    this.objects.forEach(obj => obj.update());
+    //console.log('%%%%% UPDATE $$$$$$$')
+    this.objects.forEach(obj => {
+      // console.log('update', obj)
+      obj.update()
+    });
     return this;
   };
 
