@@ -1,6 +1,6 @@
 {
   "name": "chrt-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Core components of Chrt",
   "main": "dist/chrt-core.js",
   "module": "src/index.j",
