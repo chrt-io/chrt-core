@@ -13,7 +13,10 @@ function chrtGroup() {
     add.call(this, chart);
 
     chart._groupIndex = this.objects.length - 1;
-    this.objects.forEach(obj => obj._grouped = this.objects.length)
+    this.objects.forEach(obj => {
+      obj._group = this;
+      obj._grouped = this.objects.length
+    })
 
     return this;
   }

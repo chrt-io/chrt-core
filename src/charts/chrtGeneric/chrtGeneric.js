@@ -4,6 +4,7 @@ import { data, node, parent } from '~/util';
 import { linearInterpolation } from '~/curves';
 
 export default function chrtGeneric() {
+  // console.log('chrtGeneric', this)
   this._id = null;
   this.objects = [];
   this.fields = {

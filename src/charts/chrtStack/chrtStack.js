@@ -13,7 +13,7 @@ function chrtStack() {
   this._dataMap = {};
 
   this.add = (chart) => {
-    // console.log('chrtStack','add',chart)
+    // console.log('chrtStack','add',chart, chart._area)
     chart._stacked = this;
     add.call(this, chart);
     // console.log('add', this.parentNode)
