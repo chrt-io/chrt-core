@@ -43,4 +43,6 @@ chrtGroup.prototype = Object.assign(chrtGroup.prototype, {
 
 });
 
-export default chrtGroup;
+export default function() {
+  return new chrtGroup();
+}

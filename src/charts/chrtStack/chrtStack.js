@@ -69,4 +69,6 @@ chrtStack.prototype = Object.assign(chrtStack.prototype, {
 
 });
 
-export default chrtStack;
+export default function() {
+  return new chrtStack();
+}

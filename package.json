@@ -3,7 +3,7 @@
   "version": "0.0.6",
   "description": "Core components of Chrt",
   "main": "dist/chrt-core.js",
-  "module": "src/index.j",
+  "module": "dist/chrt-core.esm.j",
   "watch": {
     "build": {
       "patterns": [
@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/chrt/exploration.git"
+    "url": "git+ssh://git@gitlab.com/chrt/chrt-core.git"
   },
   "author": "chrt",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/chrt/exploration/issues"
+    "url": "https://gitlab.com/chrt/chrt-core/issues"
   },
   "homepage": "chrt.io",
   "devDependencies": {

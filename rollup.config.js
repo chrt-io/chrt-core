@@ -34,6 +34,15 @@ export default [
     ...config,
     output: {
       ...config.output,
+      format: 'esm',
+      file: `dist/${meta.name}.esm.js`,
+    },
+    plugins: [...config.plugins]
+  },
+  {
+    ...config,
+    output: {
+      ...config.output,
       file: `dist/${meta.name}.min.js`
     },
     plugins: [
