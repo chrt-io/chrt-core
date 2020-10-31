@@ -1,6 +1,6 @@
 {
   "name": "chrt-core",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Core components of Chrt",
   "main": "dist/chrt-core.js",
   "module": "dist/chrt-core.esm.j",
