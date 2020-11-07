@@ -1,5 +1,5 @@
 import { hasData, isNull } from '~/helpers';
-import { accessor, render, update, curve, add } from '../util';
+import { accessor, render, update, curve, add, attr } from '../util';
 import { data, node, parent } from '~/util';
 import { linearInterpolation } from '~/curves';
 
@@ -12,6 +12,9 @@ export default function chrtGeneric() {
     y: 'y',
   };
   this.interpolationFunction = linearInterpolation;
+
+  // list of getter/setter function for custom attributes
+  this.attrs = [];
 
   this.id = (id) => {
     // console.log('chrtGeneric.id', id, this._id);
@@ -80,4 +83,5 @@ chrtGeneric.prototype = chrt.prototype = {
   render,
   update,
   curve,
+  attr,
 };
