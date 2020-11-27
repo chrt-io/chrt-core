@@ -1,6 +1,13 @@
 import {DEFAULT_WIDTH, DEFAULT_HEIGHT} from '~/constants';
 
-export default function size(width, height) {
+export default function size(...dimensions) {
+  if(!dimensions.length) {
+    return {
+      width: this.width,
+      height: this.height
+    }
+  }
+  const [width, height] = dimensions;
   const oldWidth = this.width;
   const oldHeight = this.height;
 
@@ -11,10 +18,11 @@ export default function size(width, height) {
   if(!svg) {
     this.svg(false);
   }
-    svg = this.root.querySelector('svg');
-    svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
-    svg.parentNode.style.width = `${this.width}px`;
-    svg.parentNode.style.height = `${this.height}px`;
+
+  svg = this.root.querySelector('svg');
+  svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
+  svg.parentNode.style.width = `${this.width}px`;
+  svg.parentNode.style.height = `${this.height}px`;
 
 
 
