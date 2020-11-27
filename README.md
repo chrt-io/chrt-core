@@ -1,5 +1,7 @@
-# CHRT
+# chrt-core
 Opinionated charts
+
+** WORK IN PROGRESS ** Please come back in few months after we will announce the first beta version. For more info mail to sayhi@chrt.io
 
 ## How to build
 
