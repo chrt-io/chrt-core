@@ -72,7 +72,7 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
 
     // console.log('CALCULATE DOMAIN BASED ON OBJECTS', this.objects)
     this.objects.forEach((obj) => {
-      const _data = (!isNull(obj.data) && obj._data.length) ? obj._data : this._data;
+      const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
       if (_data) {
         _data.forEach((d) => {
           domainExtent[0] =
