@@ -1,9 +1,9 @@
-import logTicks from "./util/logTicks";
-import { baseLog } from "~/helpers/math";
-import { memoize } from "~/util";
-import { isNull, hasNaN } from "~/helpers";
+import logTicks from './util/logTicks';
+import { baseLog } from '~/helpers/math';
+import { memoize } from '~/util';
+import { isNull, hasNaN } from '~/helpers';
 
-export default function scale(name, domain, range, transformation = "log10") {
+export default function scale(name, domain, range, transformation = 'log10') {
   // console.log('LOG SCALE', name, domain, range, transformation);
   // console.log('this.scales[',name,'].domain','=',this.scales[name].domain, 'isLog?',this.scales[name].isLog())
   const log = baseLog();
@@ -18,8 +18,8 @@ export default function scale(name, domain, range, transformation = "log10") {
 
   let _ticks = [];
 
-  range[0] += name === "x" ? this._padding.left : -this._padding.bottom;
-  range[1] -= name === "x" ? this._padding.right : -this._padding.top;
+  range[0] += name === 'x' ? this._padding.left : -this._padding.bottom;
+  range[1] -= name === 'x' ? this._padding.right : -this._padding.top;
   // // console.log(name,'RANGE',range)
 
   const currentDomain =
@@ -101,14 +101,14 @@ export default function scale(name, domain, range, transformation = "log10") {
   const rangeWidth =
     range[1] -
     range[0] -
-    (name === "x"
+    (name === 'x'
       ? this._margins.left + this._margins.right
       : this._margins.top + this._margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (name === "x" ? this._margins.left : this._margins.bottom) * direction;
+    (name === 'x' ? this._margins.left : this._margins.bottom) * direction;
 
   // // console.log('new this.scalingFunction', domainExtent, range, rangeWidth)
   const scalingFunction = (d) => {
