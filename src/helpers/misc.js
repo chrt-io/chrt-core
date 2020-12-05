@@ -4,6 +4,13 @@ export function isNull(value) {
   return value === null || value == null || typeof value === 'undefined';
 }
 
+export function hasNaN(values) {
+  if(!Array.isArray(values)) {
+    values = [values];
+  }
+  return values.some(value => isNaN(value));
+}
+
 export function uuid() {
   return (
     Math.random()

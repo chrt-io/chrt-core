@@ -15,6 +15,7 @@ const config = {
     file: `dist/${meta.name}.js`,
     name: "chrt",
     format: "umd",
+    sourcemap: 'inline',
     indent: false,
     extend: true,
     exports: 'named',
@@ -26,7 +27,6 @@ const config = {
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
-      // sourceMaps: "both",
       babelrc: false,
     }),
     bundleSize()
