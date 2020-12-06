@@ -15,7 +15,7 @@ const config = {
     file: `dist/${meta.name}.js`,
     name: "chrt",
     format: "umd",
-    sourcemap: 'inline',
+    // sourcemap: 'inline',
     indent: false,
     extend: true,
     exports: 'named',
@@ -49,7 +49,7 @@ export default [
     output: {
       ...config.output,
       file: `dist/${meta.name}.min.js`,
-      sourcemap: true
+      // sourcemap: true
     },
     plugins: [
       ...config.plugins,
