@@ -9,7 +9,7 @@ import {
   setMargins,
   setPadding,
 } from './layout';
-import { scaleLinear, scaleLog } from './scales';
+import { scaleLinear, scaleLog, scaleOrdinal } from './scales';
 import { isNull, arraysEqual } from './helpers';
 
 export function Chrt(_data = [], _node) {
@@ -80,7 +80,27 @@ export function Chrt(_data = [], _node) {
     return this;
   };
 
+  this.scaleOrdinal = (name, domain, range) => {
+    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
+    const oldRange = this.scales[name] ? this.scales[name].range : [];
+    scaleOrdinal.apply(this, [
+      name,
+      this._data.length ? domain : [],
+      range,
+    ]);
+    // console.log('----->', this.scales)
+    if(
+      !arraysEqual(oldDomain, this.scales[name].domain)
+      ||
+      !arraysEqual(oldRange, this.scales[name].range)
+    ) {
+        this.objects.forEach(obj => obj.update());
+      }
+    return this;
+  };
+
   this.x = (domain, range, options = {}) => {
+    // console.log('calling this.x', domain, range, options)
     const transformation = options
       ? options.transformation || 'linear'
       : 'linear';
@@ -93,6 +113,11 @@ export function Chrt(_data = [], _node) {
           ['x', domain, range || [0, this.width]],
           transformation
         );
+      case 'ordinal':
+        return this.scaleOrdinal.apply(
+          this,
+          ['x', domain, range || [0, this.width]]
+        )
       case 'linear':
       default:
         return this.scaleLinear.apply(this, [
@@ -127,7 +152,12 @@ export function Chrt(_data = [], _node) {
   };
 
   this.update = () => {
-    this.x();
+    //console.log('this.update', this.scales.x?.getTransformation())
+    this.x(
+      null,
+      null,
+      this.scales.x ? { transformation: this.scales.x.getTransformation() } : {}
+    );
     this.y(
       null,
       null,
