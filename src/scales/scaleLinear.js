@@ -151,11 +151,13 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   };
 
   const ticks = (n = TICKS_DEFAULT) => {
-    // // console.log('LINEAR SCALE', 'ticks', n)
+
     if (isNull(n) && _ticks.length > 0) {
       return _ticks;
     }
-    _ticks = eNumScale.ticks(n);
+    const fixedTicks = Array.isArray(n) && n.length;
+    _ticks = fixedTicks ? n : eNumScale.ticks(n);
+
 
     // TODO: Verify this, I can't remember why this was done.
     // if (_ticks.length > 1 && _ticks[0] < _ticks[1]) {
@@ -166,7 +168,7 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
       index,
       value,
       x: scalingFunction(value),
-      isMinor: index % 2,
+      isMinor: fixedTicks ? 0 : index % 2,
       isZero: value === 0,
     }));
 
