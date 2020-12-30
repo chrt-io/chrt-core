@@ -40,59 +40,81 @@ export function Chrt(_data = [], _node) {
     left: 0,
     right: 0
   };
-  this.scales = {};
+  this.scales = {
+    x: {},
+    y: {},
+  };
   this.objects = [];
 
-  this.scaleLinear = (name, domain, range) => {
-    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
-    const oldRange = this.scales[name] ? this.scales[name].range : [];
+  const _scaleLinear = (name, type, domain, range, field) => {
+    // console.log('----> _scaleLinear name:',name,'type:',type,domain,range,field)
+    // console.log('this.scales', this.scales)
+    const _scale = this.scales[type][name];
+    const oldDomain = _scale ? _scale.domain : [];
+    const oldRange = _scale ? _scale.range : [];
     scaleLinear.apply(this, [
       name,
+      type,
       domain, // || (this._data.length ? domain : null), // [0, 10] -> this messes up with the later assignement of data
-      range
+      range,
+      field,
     ]);
     if(
-      !arraysEqual(oldDomain, this.scales[name].domain)
+      !isNull(_scale) &&
+      (
+      !arraysEqual(oldDomain, _scale.domain)
       ||
-      !arraysEqual(oldRange, this.scales[name].range)
+      !arraysEqual(oldRange, _scale.range)
+      )
     ) {
         this.objects.forEach(obj => obj.update());
       }
     return this;
   };
 
-  this.scaleLog = (name, domain, range, transformation = 'log10') => {
-    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
-    const oldRange = this.scales[name] ? this.scales[name].range : [];
+  const _scaleLog = (name, type, domain, range, field, transformation = 'log10') => {
+    // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
+    const _scale = this.scales[type][name];
+    const oldDomain = _scale ? _scale.domain : [];
+    const oldRange = _scale ? _scale.range : [];
     scaleLog.apply(this, [
       name,
+      type,
       this._data.length ? domain : [1, 10],
       range,
-      transformation
+      field,
+      transformation,
     ]);
+
     if(
-      !arraysEqual(oldDomain, this.scales[name].domain)
+      !isNull(_scale) &&
+      (!arraysEqual(oldDomain, _scale.domain)
       ||
-      !arraysEqual(oldRange, this.scales[name].range)
+      !arraysEqual(oldRange, _scale.range))
     ) {
         this.objects.forEach(obj => obj.update());
       }
     return this;
   };
 
-  this.scaleOrdinal = (name, domain, range) => {
-    const oldDomain = this.scales[name] ? this.scales[name].domain : [];
-    const oldRange = this.scales[name] ? this.scales[name].range : [];
+  const _scaleOrdinal = (name, type, domain, range, field) => {
+    // console.log('scaleOrdinal', name, type, domain, range, 'field:', field)
+    const _scale = this.scales[type][name];
+    const oldDomain = _scale ? _scale.domain : [];
+    const oldRange = _scale ? _scale.range : [];
     scaleOrdinal.apply(this, [
       name,
+      type,
       this._data.length ? domain : [],
       range,
+      field,
     ]);
     // console.log('----->', this.scales)
     if(
-      !arraysEqual(oldDomain, this.scales[name].domain)
+      !isNull(_scale) &&
+      (!arraysEqual(oldDomain, _scale.domain)
       ||
-      !arraysEqual(oldRange, this.scales[name].range)
+      !arraysEqual(oldRange, _scale.range))
     ) {
         this.objects.forEach(obj => obj.update());
       }
@@ -102,67 +124,111 @@ export function Chrt(_data = [], _node) {
   this.x = (domain, range, options = {}) => {
     // console.log('calling this.x', domain, range, options)
     const transformation = options
-      ? options.transformation || 'linear'
+      ? options.scale || 'linear'
       : 'linear';
     switch (transformation) {
       case 'log':
       case 'log10':
       case 'log2':
-        return this.scaleLog.apply(
-          this,
-          ['x', domain, range || [0, this.width]],
-          transformation
+        return _scaleLog(
+          options.name || 'x',
+          'x',
+          domain,
+          range || [0, this.width],
+          options.field || 'x',
+          transformation,
         );
       case 'ordinal':
-        return this.scaleOrdinal.apply(
+        //console.log('this.x','ordinal', domain, options.name,options.field)
+        return _scaleOrdinal.apply(
           this,
-          ['x', domain, range || [0, this.width]]
+          [
+            options.name || 'x',
+            'x',
+            domain,
+            range || [0, this.width],
+            options.field || 'x'
+          ],
         )
       case 'linear':
       default:
-        return this.scaleLinear.apply(this, [
+        return _scaleLinear.apply(this, [
+          options.name || 'x',
           'x',
           domain,
-          range || [0, this.width]
+          range || [0, this.width],
+          options.field || 'x'
         ]);
     }
   };
 
   this.y = (domain, range, options = {}) => {
+    // console.log('calling this.y', domain, range, field, options)
     const transformation = options
-      ? options.transformation || 'linear'
+      ? options.scale || 'linear'
       : 'linear';
     switch (transformation) {
       case 'log':
       case 'log10':
       case 'log2':
-        return this.scaleLog.apply(
+        return _scaleLog(
+          options.name || 'y',
+          'y',
+          domain,
+          range || [this.height, 0],
+          options.field || 'y',
+          transformation,
+        );
+      case 'ordinal':
+        console.log('this.y','ordinal', domain, options.name,options.field)
+        return _scaleOrdinal.apply(
           this,
-          ['y', domain, range || [this.height, 0]],
-          transformation
+          [
+            options.name || 'y',
+            'y',
+            domain,
+            range || [this.height, 0],
+            options.field || 'y'
+          ]
         );
       case 'linear':
       default:
-        return this.scaleLinear.apply(this, [
+        return _scaleLinear.apply(this, [
+          options.name || 'y',
           'y',
           domain,
-          range || [this.height, 0]
+          range || [this.height, 0],
+          options.field || 'y'
         ]);
     }
   };
 
   this.update = () => {
-    //console.log('this.update', this.scales.x?.getTransformation())
-    this.x(
-      null,
-      null,
-      this.scales.x ? { transformation: this.scales.x.getTransformation() } : {}
-    );
-    this.y(
-      null,
-      null,
-      this.scales.y ? { transformation: this.scales.y.getTransformation() } : {}
-    );
+    if(!Object.values(this.scales.x).length) {
+      this.x(null,[0, this.width])
+    } else {
+      Object.values(this.scales.x).forEach(scale => {
+        this.x(null, [0, this.width], {
+          name: scale.getName(),
+          type: scale.getType(),
+          field: scale.field,
+          scale: scale.transformation,
+        })
+      })
+    }
+    if(!Object.values(this.scales.y).length) {
+      this.y(null,[this.height, 0])
+    } else {
+      Object.values(this.scales.y).forEach(scale => {
+        this.y(null, [this.height, 0], {
+          name: scale.getName(),
+          type: scale.getType(),
+          field: scale.field,
+          scale: scale.transformation,
+        })
+      })
+    }
+
     this.objects.forEach(obj => {
       obj.update()
     });

@@ -8,9 +8,13 @@ export default function chrtGeneric() {
   this._id = null;
   this.objects = [];
   this.fields = {
+    x: null,
+    y: null,
+  };
+  this.scales = {
     x: 'x',
     y: 'y',
-  };
+  }
   this.interpolationFunction = linearInterpolation;
 
   // list of getter/setter function for custom attributes
@@ -39,31 +43,24 @@ export default function chrtGeneric() {
     return this.parentNode;
   }
 
-  const setField = (field, value) => {
-    if(!isNull(value)) {
-      this.fields[field] = value;
-      // TODO: verify if this is necessary -> maybe not
-      // this._accessor = (d) => {
-      //   return {
-      //     x: d[this.fields.x],
-      //     y: d[this.fields.y],
-      //   }
-      // };
+  const setScale = (scale, scaleName) => {
+    if(!isNull(scaleName)) {
+      this.scales[scale] = scaleName;
     }
   }
 
-  this.x = (value) => {
-    if(isNull(value)) {
-      return this.fields.x;
+  this.x = (scale = 'x') => {
+    if(isNull(scale)) {
+      return this.scales.x;
     }
-    setField('x', value)
+    setScale('x', scale)
     return this;
   };
-  this.y = (value) => {
-    if(isNull(value)) {
-      return this.fields.y;
+  this.y = (scale = 'y') => {
+    if(isNull(scale)) {
+      return this.scale.y;
     }
-    setField('y', value);
+    setScale('y', scale)
     return this;
   }
 

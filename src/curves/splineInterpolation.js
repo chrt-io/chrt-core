@@ -3,8 +3,8 @@ import { svgPath } from '../layout';
 export default function splineInterpolation(data) {
   return svgPath(
     data.map(d => [
-      this.parentNode.scales['x'](d[this.fields.x]),
-      this.parentNode.scales['y'](d[this.fields.y])
+      this.parentNode.scales.x[this.scales.x](d[this.fields.x]),
+      this.parentNode.scales.y[this.scales.y](d[this.fields.y])
     ]),
     bezierCommand
   );

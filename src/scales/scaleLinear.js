@@ -4,25 +4,29 @@ import { memoize } from '~/util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
 
-export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
-  // console.log(`scale(${name}, ${domain}, range = ${[0, DEFAULT_WIDTH]})`)
+export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field) {
+  // console.log(`LINEAR scale(${name}, ${type}, ${domain}, ${range}, ${field})`)
+
+  const _scale = this.scales[type][name];
+  // console.log(`LINEAR: this.scales[${type}][${name}]=`,_scale);
 
   const fixedDomain =
-    domain || (this.scales[name] ? this.scales[name].fixedDomain : null);
+    domain || (_scale ? _scale.fixedDomain : null);
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
     //domain = [0, 1]; // not sure anymore about this
   }
   let _ticks = [];
-  // // console.log('rrrrange', range)
-  range[0] += name === 'x' ? this._padding.left : -this._padding.bottom;
-  range[1] -= name === 'x' ? this._padding.right : -this._padding.top;
+
+  // TODO: this should be removed and calculated somewhere else
+  range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
+  range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
   // // console.log(name,'RANGE',range)
 
   const currentDomain =
-    this.scales[name] && !this.scales[name].isLog()
-      ? this.scales[name].domain
+    _scale && !_scale.isLog()
+      ? _scale.domain
       : [];
   let domainExtent = copyOfFixedDomain || domain || currentDomain;
 
@@ -30,14 +34,14 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // console.log('FIXED DOMAIN', name, fixedDomain)
   // console.log('CURRENT DOMAIN', name, currentDomain);
   if (arguments.length === 1) {
-    return this.scales[arguments[0]];
+    return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
   }
 
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
   // console.log("fixedDomain", fixedDomain);
-  // console.log("domainExtent", domainExtent, hasNaN(domainExtent));
-  // console.log("currentDomain", currentDomain, hasNaN(currentDomain));
+  // console.log("domainExtent", domainExtent);
+  // console.log("currentDomain", currentDomain);
   if (
     isNull(fixedDomain) ||
     hasNaN(currentDomain) ||
@@ -47,22 +51,22 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     domainExtent[1] !== currentDomain[1]
   ) {
     // if(isNull(fixedDomain)) {
-    // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, this._data)
+    // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
     this._data.forEach((d) => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
       domainExtent[0] =
         isNull(domainExtent[0])
-          ? d[name]
+          ? d[field || name]
           : Math.min(
-              ...[d[name], domainExtent[0], d[`stacked_${name}`]].filter(
+              ...[d[field || name], domainExtent[0], d[`stacked_${field || name}`]].filter(
                 (value) => !isNull(value)
               )
             );
       domainExtent[1] =
         isNull(domainExtent[1])
-          ? d[name]
+          ? d[field || name]
           : Math.max(
-              ...[d[name], domainExtent[1], d[`stacked_${name}`]].filter(
+              ...[d[field || name], domainExtent[1], d[`stacked_${field || name}`]].filter(
                 (value) => !isNull(value)
               )
             );
@@ -70,36 +74,42 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
 
     // console.log('DOMAIN EXTENT', name, domainExtent)
 
-    // console.log('CALCULATE DOMAIN BASED ON OBJECTS', this.objects)
+    // console.log('CALCULATE DOMAIN BASED ON OBJECTS', name, field, this.objects)
     this.objects.forEach((obj) => {
       const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
       if (_data) {
+        // console.log('OBJ/CHART', obj)
         _data.forEach((d) => {
           domainExtent[0] =
             isNull(domainExtent[0])
-              ? d[obj.fields[name]]
+              ? d[field || obj.fields[name]]
               : Math.min(
                   ...[
-                    d[obj.fields[name]],
+                    d[field || obj.fields[name]],
                     domainExtent[0],
-                    d[`stacked_${obj.fields[name]}`],
+                    d[`stacked_${field || obj.fields[name]}`],
                   ].filter((value) => !isNull(value) && !hasNaN(value))
                 );
           domainExtent[1] =
             isNull(domainExtent[1])
-              ? d[obj.fields[name]]
+              ? d[field || obj.fields[name]]
               : Math.max(
                   ...[
-                    d[obj.fields[name]],
+                    d[field || obj.fields[name]],
                     domainExtent[1],
-                    d[`stacked_${obj.fields[name]}`],
+                    d[`stacked_${field || obj.fields[name]}`],
                   ].filter((value) => !isNull(value) && !hasNaN(value))
                 );
         });
       }
     });
 
-    // console.log('DOMAIN EXTENT', name, domainExtent)
+    // console.log('DOMAIN EXTENT', name, field, domainExtent)
+  } else {
+    // console.log('FAILED IF BECAUSE')
+    // console.log(this.objects)
+    // console.log("domainExtent", domainExtent);
+    // console.log("currentDomain", currentDomain);
   }
 
   // // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
@@ -135,14 +145,14 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   const rangeWidth =
     range[1] -
     range[0] -
-    (name === 'x'
+    (type === 'x'
       ? this._margins.left + this._margins.right
       : this._margins.top + this._margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (name === 'x' ? this._margins.left : this._margins.bottom) * direction;
+    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
 
   // // console.log('new this.scalingFunction', domainExtent, range, rangeWidth)
   const scalingFunction = (d) => {
@@ -175,18 +185,14 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     // return _ticks;
   };
 
-  const getName = () => {
-    return name;
-  };
-  const getTransformation = () => {
-    return 'linear';
-  };
-
-  scalingFunction.getName = getName;
-  scalingFunction.getTransformation = getTransformation;
+  scalingFunction.getName = () => name;
+  scalingFunction.getType = () => type;
+  scalingFunction.transformation = 'linear';
+  scalingFunction.getField = () => field;
   scalingFunction.isLog = () => false;
   scalingFunction.fixedDomain = fixedDomain;
   scalingFunction.domain = domainExtent;
+  scalingFunction.field = field;
   scalingFunction.range = range;
   scalingFunction.step = eNumScale.getStep();
   scalingFunction.barwidth =
@@ -194,6 +200,6 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     scalingFunction(domainExtent[0]);
 
   scalingFunction.ticks = memoize(ticks);
-  this.scales[name] = scalingFunction;
+  this.scales[type][name] = scalingFunction;
   return this;
 }

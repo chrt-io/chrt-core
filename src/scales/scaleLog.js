@@ -3,13 +3,16 @@ import { baseLog } from '~/helpers/math';
 import { memoize } from '~/util';
 import { isNull, hasNaN } from '~/helpers';
 
-export default function scale(name, domain, range, transformation = 'log10') {
-  // console.log('LOG SCALE', name, domain, range, transformation);
+export default function scale(name, type, domain, range, field, transformation = 'log10') {
+  // console.log('LOG SCALE', name, type, domain, range, 'field:', field, transformation);
   // console.log('this.scales[',name,'].domain','=',this.scales[name].domain, 'isLog?',this.scales[name].isLog())
+
+  const _scale = this.scales[type][name];
+  // console.log(`LOG: this.scales[${type}][${name}]=`,_scale, transformation);
   const log = baseLog();
 
   const fixedDomain =
-    domain || (this.scales[name] ? this.scales[name].fixedDomain : null);
+    domain || (_scale ? _scale.fixedDomain : null);
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
@@ -18,18 +21,18 @@ export default function scale(name, domain, range, transformation = 'log10') {
 
   let _ticks = [];
 
-  range[0] += name === 'x' ? this._padding.left : -this._padding.bottom;
-  range[1] -= name === 'x' ? this._padding.right : -this._padding.top;
+  range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
+  range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
   // // console.log(name,'RANGE',range)
 
   const currentDomain =
-    this.scales[name] && this.scales[name].isLog()
-      ? this.scales[name].domain
+    _scale && _scale.isLog()
+      ? _scale.domain
       : [];
   let domainExtent = copyOfFixedDomain || domain || currentDomain;
   // console.log('using domainExtent', domainExtent[0], domainExtent[1]);
   if (arguments.length === 1) {
-    return this.scales[arguments[0]];
+    return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
   }
   if (
     isNull(fixedDomain) ||
@@ -40,15 +43,25 @@ export default function scale(name, domain, range, transformation = 'log10') {
     domainExtent[1] !== currentDomain[1]
   ) {
     this._data
-      .filter((d) => d[name] > 0)
+      .filter((d) => d[field] > 0)
       .forEach((d) => {
-        console.log(name, d[name])
-        domainExtent[0] = isNull(domainExtent[0])
-          ? d[name]
-          : Math.min(d[name], domainExtent[0]);
-        domainExtent[1] = isNull(domainExtent[1])
-          ? d[name]
-          : Math.max(d[name], domainExtent[1]);
+        // console.log(name, d[name])
+        domainExtent[0] =
+          isNull(domainExtent[0])
+            ? d[field || name]
+            : Math.min(
+                ...[d[field || name], domainExtent[0], d[`stacked_${field || name}`]].filter(
+                  (value) => !isNull(value)
+                )
+              );
+        domainExtent[1] =
+          isNull(domainExtent[1])
+            ? d[field || name]
+            : Math.max(
+                ...[d[field || name], domainExtent[1], d[`stacked_${field || name}`]].filter(
+                  (value) => !isNull(value)
+                )
+              );
       });
 
     this.objects.forEach((obj) => {
@@ -56,21 +69,21 @@ export default function scale(name, domain, range, transformation = 'log10') {
       if (_data) {
         _data.forEach((d) => {
           domainExtent[0] = isNull(domainExtent[0])
-            ? d[obj.fields[name]]
+            ? d[obj.fields[field || name]]
             : Math.min(
                 ...[
-                  d[obj.fields[name]],
+                  d[field || obj.fields[name]],
                   domainExtent[0],
-                  d[`stacked_${obj.fields[name]}`],
+                  d[`stacked_${field || obj.fields[name]}`],
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
           domainExtent[1] = isNull(domainExtent[1])
-            ? d[obj.fields[name]]
+            ? d[obj.fields[field || name]]
             : Math.max(
                 ...[
-                  d[obj.fields[name]],
+                  d[field || obj.fields[name]],
                   domainExtent[1],
-                  d[`stacked_${obj.fields[name]}`],
+                  d[`stacked_${field || obj.fields[name]}`],
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
         });
@@ -101,14 +114,14 @@ export default function scale(name, domain, range, transformation = 'log10') {
   const rangeWidth =
     range[1] -
     range[0] -
-    (name === 'x'
+    (type === 'x'
       ? this._margins.left + this._margins.right
       : this._margins.top + this._margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (name === 'x' ? this._margins.left : this._margins.bottom) * direction;
+    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
 
   // // console.log('new this.scalingFunction', domainExtent, range, rangeWidth)
   const scalingFunction = (d) => {
@@ -132,21 +145,22 @@ export default function scale(name, domain, range, transformation = 'log10') {
     return _ticks;
   };
 
-  const getName = () => {
-    return name;
-  };
-  const getTransformation = () => {
-    return transformation;
-  };
+  // console.log('scaleLog NAME', name)
+  // console.log('scaleLog FIELD', field)
+  // console.log('scaleLog TRANSFORMATION', transformation)
 
-  scalingFunction.getName = getName;
-  scalingFunction.getTransformation = getTransformation;
+  scalingFunction.getName = () => name;
+  scalingFunction.getType = () => type;
+  scalingFunction.getTransformation = () => transformation;
+  scalingFunction.transformation = transformation;
+  scalingFunction.getField = () => field;
+  scalingFunction.field = field;
   scalingFunction.isLog = () => true;
   scalingFunction.fixedDomain = fixedDomain;
   scalingFunction.domain = domainExtent;
   scalingFunction.range = range;
 
   scalingFunction.ticks = memoize(ticks);
-  this.scales[name] = scalingFunction;
+  this.scales[type][name] = scalingFunction;
   return this;
 }

@@ -4,10 +4,12 @@ import { isNull, arraysEqual } from '~/helpers';
 //import Heckbert from './util/Heckbert';
 //import ExtendedWilkinson from './util/ExtendedWilkinson';
 
-export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
-  // console.log('scale', arguments)
+export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field) {
+  // console.log('scaleOrdinal', name, type, domain, range, field)
+  const _scale = this.scales[type][name];
+
   const fixedDomain =
-    domain || (this.scales[name] ? this.scales[name].fixedDomain : null);
+    domain || (_scale && _scale.transformation === 'ordinal' ? _scale.fixedDomain : null);
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
@@ -15,13 +17,13 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   }
   let _ticks = [];
   // // console.log('rrrrange', range)
-  range[0] += name === 'x' ? this._padding.left : -this._padding.bottom;
-  range[1] -= name === 'x' ? this._padding.right : -this._padding.top;
+  range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
+  range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
   // // console.log(name,'RANGE',range)
-
+  // console.log('ORDINAL', _scale, _scale.getName(), _scale.transformation)
   const currentDomain =
-    this.scales[name] && this.scales[name].getTransformation() === 'ordinal'
-      ? this.scales[name].domain
+    _scale && _scale.transformation === 'ordinal'
+      ? _scale.domain
       : [];
   let domainExtent = copyOfFixedDomain || domain || currentDomain;
 
@@ -29,13 +31,13 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // console.log('FIXED DOMAIN', name, fixedDomain)
   // console.log('CURRENT DOMAIN', name, currentDomain);
   if (arguments.length === 1) {
-    return this.scales[arguments[0]];
+    return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
   }
 
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
   // console.log("fixedDomain", fixedDomain);
-  // console.log("domainExtent", domainExtent, hasNaN(domainExtent));
+  // console.log("domainExtent", domainExtent);
   // console.log("currentDomain", currentDomain, hasNaN(currentDomain));
   if (
     isNull(fixedDomain) ||
@@ -46,8 +48,8 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     // if(isNull(fixedDomain)) {
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, this._data)
     this._data.forEach((d) => {
-      if(domainExtent.indexOf(d[name]) === -1) {
-        domainExtent.push(d[name]);
+      if(domainExtent.indexOf(d[field || name]) === -1) {
+        domainExtent.push(d[field || name]);
       }
     });
 
@@ -58,8 +60,8 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
       const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
       if (_data) {
         _data.forEach((d) => {
-          if(domainExtent.indexOf(d[obj.fields[name]]) === -1) {
-            domainExtent.push(d[obj.fields[name]]);
+          if(domainExtent.indexOf(d[obj.fields[type]]) === -1) {
+            domainExtent.push(d[obj.fields[type]]);
           }
         });
       }
@@ -68,47 +70,19 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     // console.log('DOMAIN EXTENT', name, domainExtent)
   }
 
-  // // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
-
-  // const numScale = new Heckbert(domainExtent);
-  // const eNumScale = new ExtendedWilkinson(domainExtent);
-  // // console.log('E WILK', eNumScale.ticks())
-  // re-assign domain based on, max/min of heckbert nice scale
-  // console.log(domainExtent[0],domainExtent[1],'after WILKINSON', eNumScale.getMin(), eNumScale.getMax())
-
-  // TODO: not sure which one is best between the 2 following:
-  // if(!currentDomain) {
-  //   domainExtent[0] = eNumScale.getMin();
-  //   domainExtent[1] = eNumScale.getMax();
-  // }
-  // console.log('fixedDomain', fixedDomain);
-  // if (isNull(fixedDomain)) {
-  //   // console.log('--->eNumScale',eNumScale.getMin(), eNumScale.getMax())
-  //   domainExtent[0] = !isNull(currentDomain[0])
-  //     ? Math.min(currentDomain[0], eNumScale.getMin())
-  //     : eNumScale.getMin();
-  //   domainExtent[1] = !isNull(currentDomain[1])
-  //     ? Math.max(currentDomain[1], eNumScale.getMax())
-  //     : eNumScale.getMax();
-  // }
-
-  // console.log('new domain is ', domainExtent)
-
-  // console.log('AFTER WILK DOMAIN',  name, [...domainExtent])
-
   const domainWidth = domainExtent.length;
   const direction = range[1] >= range[0] ? 1 : -1;
   const rangeWidth =
     range[1] -
     range[0] -
-    (name === 'x'
+    (type === 'x'
       ? this._margins.left + this._margins.right
       : this._margins.top + this._margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (name === 'x' ? this._margins.left : this._margins.bottom) * direction;
+    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
 
   const barwidth = rangeWidth / domainExtent.length;
 
@@ -132,15 +106,11 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
     // return _ticks;
   };
 
-  const getName = () => {
-    return name;
-  };
-  const getTransformation = () => {
-    return 'ordinal';
-  };
-
-  scalingFunction.getName = getName;
-  scalingFunction.getTransformation = getTransformation;
+  scalingFunction.getName = () => name;
+  scalingFunction.getType = () => type;
+  scalingFunction.transformation = 'ordinal';
+  scalingFunction.getField = () => field;
+  scalingFunction.field = field;
   scalingFunction.isLog = () => false;
   scalingFunction.fixedDomain = fixedDomain;
   scalingFunction.domain = domainExtent;
@@ -151,6 +121,6 @@ export default function scale(name, domain, range = [0, DEFAULT_WIDTH]) {
   // console.log(scalingFunction.domain)
 
   scalingFunction.ticks = ticks;
-  this.scales[name] = scalingFunction;
+  this.scales[type][name] = scalingFunction;
   return this;
 }
