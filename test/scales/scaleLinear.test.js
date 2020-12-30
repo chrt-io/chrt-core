@@ -9,26 +9,26 @@ describe('Testing linear scale', () => {
   });
 
   test('test if the x scale is named x', () => {
-    expect(scales['x'].getName()).toBe('x');
+    expect(scales.x['x'].getName()).toBe('x');
   });
 
   test('test if domain is an array', () => {
-    expect(scales['x'].domain).toBeInstanceOf(Array);
+    expect(scales.x['x'].domain).toBeInstanceOf(Array);
   });
 
   test('test if range is an array', () => {
-    expect(scales['x'].range).toBeInstanceOf(Array);
+    expect(scales.x['x'].range).toBeInstanceOf(Array);
   });
 
   test.each([
     ['domain', 2],
     ['range', 2]
   ])('%p length is %i', (d, expected) => {
-    expect(scales['x'][d].length).toBe(expected);
+    expect(scales.x['x'][d].length).toBe(expected);
   });
 
   test('test ticks() is an array', () => {
-    expect(scales['x'].ticks()).toBeInstanceOf(Array);
+    expect(scales.x['x'].ticks()).toBeInstanceOf(Array);
   });
 
   test.each([
@@ -37,15 +37,15 @@ describe('Testing linear scale', () => {
   ])('test scaleLinear(x) is within range %i, %i', (lower, upper) => {
     const chrt = new Chrt().x([0,10],[lower,upper]);
     const scales = chrt.scales;
-    const domain = scales['x'].domain;
-    const range = scales['x'].range;
+    const domain = scales.x['x'].domain;
+    const range = scales.x['x'].range;
 
     if(range[0] < range[1]) {
-      expect(scales['x']((domain[0] + domain[1])/2)).toBeGreaterThanOrEqual(range[0]);
-      expect(scales['x']((domain[0] + domain[1])/2)).toBeLessThan(range[1]);
+      expect(scales.x['x']((domain[0] + domain[1])/2)).toBeGreaterThanOrEqual(range[0]);
+      expect(scales.x['x']((domain[0] + domain[1])/2)).toBeLessThan(range[1]);
     } else {
-      expect(scales['x']((domain[0] + domain[1])/2)).toBeGreaterThanOrEqual(range[1]);
-      expect(scales['x']((domain[0] + domain[1])/2)).toBeLessThan(range[0]);
+      expect(scales.x['x']((domain[0] + domain[1])/2)).toBeGreaterThanOrEqual(range[1]);
+      expect(scales.x['x']((domain[0] + domain[1])/2)).toBeLessThan(range[0]);
     }
   })
 
@@ -55,13 +55,13 @@ describe('Testing linear scale', () => {
   ])('test scaleLinear(domain[0]) is within range %i, %i', (lower, upper) => {
     const chrt = new Chrt().x([0,10],[lower,upper]);
     const scales = chrt.scales;
-    const domain = scales['x'].domain;
-    const range = scales['x'].range;
+    const domain = scales.x['x'].domain;
+    const range = scales.x['x'].range;
 
     if(range[0] < range[1]) {
-      expect(scales['x'](domain[0])).toBeGreaterThanOrEqual(range[0]);
+      expect(scales.x['x'](domain[0])).toBeGreaterThanOrEqual(range[0]);
     } else {
-      expect(scales['x'](domain[0])).toBeLessThanOrEqual(range[0]);
+      expect(scales.x['x'](domain[0])).toBeLessThanOrEqual(range[0]);
     }
   })
 
@@ -72,13 +72,13 @@ describe('Testing linear scale', () => {
     const chrt = new Chrt().x([0,10],[lower,upper]);
     const scales = chrt.scales;
 
-    const domain = scales['x'].domain;
-    const range = scales['x'].range;
+    const domain = scales.x['x'].domain;
+    const range = scales.x['x'].range;
 
     if(range[0] < range[1]) {
-      expect(scales['x'](domain[1])).toBeLessThanOrEqual(range[1]);
+      expect(scales.x['x'](domain[1])).toBeLessThanOrEqual(range[1]);
     } else {
-      expect(scales['x'](domain[1])).toBeGreaterThanOrEqual(range[1]);
+      expect(scales.x['x'](domain[1])).toBeGreaterThanOrEqual(range[1]);
     }
   })
 });
