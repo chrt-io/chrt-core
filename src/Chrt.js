@@ -9,7 +9,7 @@ import {
   setMargins,
   setPadding,
 } from './layout';
-import { scaleLinear, scaleLog, scaleOrdinal } from './scales';
+import { scaleLinear, scaleLog, scaleOrdinal, scaleTime } from './scales';
 import { isNull, arraysEqual } from './helpers';
 
 export function Chrt(_data = [], _node) {
@@ -121,6 +121,30 @@ export function Chrt(_data = [], _node) {
     return this;
   };
 
+  const _scaleTime = (name, type, domain, range, field) => {
+    // console.log('scaleTime', name, type, domain, range, 'field:', field)
+    const _scale = this.scales[type][name];
+    const oldDomain = _scale ? _scale.domain : [];
+    const oldRange = _scale ? _scale.range : [];
+    scaleTime.apply(this, [
+      name,
+      type,
+      this._data.length ? domain : [],
+      range,
+      field,
+    ]);
+    // console.log('----->', this.scales)
+    if(
+      !isNull(_scale) &&
+      (!arraysEqual(oldDomain, _scale.domain)
+      ||
+      !arraysEqual(oldRange, _scale.range))
+    ) {
+        this.objects.forEach(obj => obj.update());
+      }
+    return this;
+  }
+
   this.x = (domain, range, options = {}) => {
     // console.log('calling this.x', domain, range, options)
     const transformation = options
@@ -137,6 +161,18 @@ export function Chrt(_data = [], _node) {
           range || [0, this.width],
           options.field || 'x',
           transformation,
+        );
+      case 'time':
+        // console.log('this.x','time', domain, options.name,options.field)
+        return _scaleTime.apply(
+          this,
+          [
+            options.name || 'x',
+            'x',
+            domain,
+            range || [0, this.width],
+            options.field || 'x'
+          ],
         );
       case 'ordinal':
         //console.log('this.x','ordinal', domain, options.name,options.field)
@@ -179,8 +215,20 @@ export function Chrt(_data = [], _node) {
           options.field || 'y',
           transformation,
         );
+      case 'time':
+        // console.log('this.x','time', domain, options.name,options.field)
+        return _scaleTime.apply(
+          this,
+          [
+            options.name || 'y',
+            'y',
+            domain,
+            range || [this.height, 0],
+            options.field || 'y'
+          ],
+        );
       case 'ordinal':
-        console.log('this.y','ordinal', domain, options.name,options.field)
+        // console.log('this.y','ordinal', domain, options.name,options.field)
         return _scaleOrdinal.apply(
           this,
           [
@@ -205,9 +253,11 @@ export function Chrt(_data = [], _node) {
 
   this.update = () => {
     if(!Object.values(this.scales.x).length) {
+      // console.log('no scales x -> create a default linear scale')
       this.x(null,[0, this.width])
     } else {
       Object.values(this.scales.x).forEach(scale => {
+        // console.log('scale x exists:', scale.getName(), scale.getType(), scale.transformation)
         this.x(null, [0, this.width], {
           name: scale.getName(),
           type: scale.getType(),

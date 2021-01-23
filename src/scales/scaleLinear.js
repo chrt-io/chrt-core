@@ -161,7 +161,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   };
 
   const ticks = (n = TICKS_DEFAULT) => {
-
+    // TODO: n can never be null...this needs to be reviews, it doesn't work well, _ticks?!?
     if (isNull(n) && _ticks.length > 0) {
       return _ticks;
     }
