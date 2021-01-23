@@ -203,14 +203,14 @@ export default function scale(
     // console.log('DOMAIN EXTENT', name, domainExtent, domainExtent.map(d => new Date(d)))
   }
 
-  // console.log('new domain is ', domainExtent)
+  // console.log('new domain is ', domainExtent, domainExtent.map(d => new Date(d)))
 
   // console.log('AFTER WILK DOMAIN',  name, [...domainExtent])
 
   const calculateTimeDomain = (interval) => {
     if (domainExtent.length) {
       const _domainExtent = [...domainExtent];
-
+      // console.log('---->', interval, '_domainExtent', _domainExtent, _domainExtent.map(d => new Date(d)))
       if (isNull(interval)) {
         // console.log('NEED TO FIND BEST UNIT');
         interval = UNITS.seconds;
@@ -226,20 +226,21 @@ export default function scale(
         // step = UNITS[interval] || LONGER_UNITS[interval] || UNITS.day;
       }
       step = UNITS[interval] || LONGER_UNITS[interval] || UNITS.day;
-      // console.log('NEW DOMAIN',domainExtent[0],'/',step)
       //domainExtent[0] = new Date(domainExtent)
       // console.log('original dates', domainExtent.map(d => new Date(d)))
-      if (step > UNITS.week) {
+      if (step > LONGER_UNITS.week) {
         const d0 = new Date(_domainExtent[0]);
         const d1 = new Date(_domainExtent[1]);
         switch (interval) {
           case 'month':
+          case 'months':
             _domainExtent[0] = new Date(d0.getFullYear(), d0.getMonth(), 1);
             _domainExtent[1] = new Date(d1.getFullYear(), d1.getMonth() + 1, 1);
             break;
           case 'year':
-            _domainExtent[0] = d0; // new Date(y0.getFullYear(), 0, 1);
-            _domainExtent[1] = d1; //new Date(y1.getFullYear(), 0, 1);
+          case 'years':
+            _domainExtent[0] = new Date(d0.getFullYear(), 0, 1);
+            _domainExtent[1] = new Date(d1.getFullYear(), 0, 1);
             break;
         }
 
@@ -307,6 +308,7 @@ export default function scale(
       return [];
     }
     const _domainExtent = calculateTimeDomain(interval);
+    // console.log('time domain', _domainExtent, _domainExtent.map(d => new Date(d)))
     const _domainWidth = _domainExtent[1] - _domainExtent[0];
 
     // console.log("TICKS", _domainExtent, _domainExtent.map(d => new Date(d)))

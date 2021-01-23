@@ -129,7 +129,7 @@ export function Chrt(_data = [], _node) {
     scaleTime.apply(this, [
       name,
       type,
-      this._data.length ? domain : [],
+      domain || [],
       range,
       field,
     ]);
@@ -258,7 +258,7 @@ export function Chrt(_data = [], _node) {
     } else {
       Object.values(this.scales.x).forEach(scale => {
         // console.log('scale x exists:', scale.getName(), scale.getType(), scale.transformation)
-        this.x(null, [0, this.width], {
+        this.x(scale.fixedDomain, [0, this.width], {
           name: scale.getName(),
           type: scale.getType(),
           field: scale.field,
@@ -270,7 +270,7 @@ export function Chrt(_data = [], _node) {
       this.y(null,[this.height, 0])
     } else {
       Object.values(this.scales.y).forEach(scale => {
-        this.y(null, [this.height, 0], {
+        this.y(scale.fixedDomain, [this.height, 0], {
           name: scale.getName(),
           type: scale.getType(),
           field: scale.field,
