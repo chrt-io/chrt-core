@@ -289,7 +289,7 @@ export function Chrt(_data = [], _node) {
     return this.objects.find(obj => obj.type === 'axis' && obj.name === name && (!orientation || obj.orientation === orientation));
   }
 
-  this.css = (prefix) => {
+  this.class = (prefix) => {
     if(!isNull(prefix) && typeof prefix !== 'string') {
       console.warn('CSS prefix should be a string. Setting main class name to \'chrt\'.');
       prefix = null;
@@ -298,6 +298,8 @@ export function Chrt(_data = [], _node) {
     this.root.classList.add(this._css);
     return this;
   }
+
+  this.css = this.class;
 }
 
 function chrt(data, node) {

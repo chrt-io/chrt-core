@@ -15,6 +15,8 @@ export default function chrtGeneric() {
     x: 'x',
     y: 'y',
   }
+  this._classNames = [];
+
   this.interpolationFunction = linearInterpolation;
 
   // list of getter/setter function for custom attributes
@@ -25,13 +27,25 @@ export default function chrtGeneric() {
     if(isNull(id)) {
       return this._id;
     }
-    this._id = this._id || id;
+    this._id = id || this._id;
 
     if(this.g) {
       this.g.setAttribute('id', this._id);
     }
+    return this;
+  }
 
+  this.class = (className) => {
+    console.log('adding className', className)
+    if(isNull(className)) {
+      return this._classNames;
+    }
+    const classNames = className.split(' ');
+    this._classNames = [...this._classNames.filter(d => d !== className), ...classNames];
 
+    if(this.g) {
+      classNames.forEach(d => this.g.classList.add(d));
+    }
     return this;
   }
 
