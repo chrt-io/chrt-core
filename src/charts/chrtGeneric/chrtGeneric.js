@@ -36,7 +36,6 @@ export default function chrtGeneric() {
   }
 
   this.class = (className) => {
-    console.log('adding className', className)
     if(isNull(className)) {
       return this._classNames;
     }
@@ -51,10 +50,6 @@ export default function chrtGeneric() {
 
   this.hasData = () => {
     return hasData(this);
-  }
-
-  this.draw = () => {
-    return this.parentNode;
   }
 
   const setScale = (scale, scaleName) => {
@@ -85,7 +80,10 @@ function chrt() {
   return new chrtGeneric();
 }
 
-chrtGeneric.prototype = chrt.prototype = {
+chrtGeneric.prototype = Object.create(chrt.prototype);
+
+// chrtGeneric.prototype = chrt.prototype = Object.assign(chrt.prototype, {
+chrtGeneric.prototype = Object.assign(chrtGeneric.prototype, {
   node,
   data,
   add,
@@ -95,4 +93,4 @@ chrtGeneric.prototype = chrt.prototype = {
   update,
   curve,
   attr,
-};
+});
