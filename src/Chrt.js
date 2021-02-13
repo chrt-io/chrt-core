@@ -74,13 +74,15 @@ export function Chrt(_data = [], _node) {
 
   const _scaleLog = (name, type, domain, range, field, transformation = 'log10') => {
     // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
+
     const _scale = this.scales[type][name];
     const oldDomain = _scale ? _scale.domain : [];
     const oldRange = _scale ? _scale.range : [];
     scaleLog.apply(this, [
       name,
       type,
-      this._data.length ? domain : [1, 10],
+      // (domain || this._data.length) ? domain : [1, 10],
+      domain,
       range,
       field,
       transformation,
@@ -199,7 +201,7 @@ export function Chrt(_data = [], _node) {
   };
 
   this.y = (domain, range, options = {}) => {
-    // console.log('calling this.y', domain, range, field, options)
+    // console.log('calling this.y', domain, range, options)
     const transformation = options
       ? options.scale || 'linear'
       : 'linear';

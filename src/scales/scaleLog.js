@@ -13,6 +13,7 @@ export default function scale(name, type, domain, range, field, transformation =
 
   const fixedDomain =
     domain || (_scale ? _scale.fixedDomain : null);
+  // console.log('setting fixedDomain to', fixedDomain)
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
