@@ -26,6 +26,9 @@ export function hasData(obj) {
 }
 
 export function isInfinity(value) {
+  if(typeof value === 'string') {
+    return false;
+  }
   return !isFinite(value);
 }
 

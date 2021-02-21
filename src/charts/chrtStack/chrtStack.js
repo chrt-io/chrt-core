@@ -9,8 +9,22 @@ function chrtStack() {
   this.type = 'stack';
   this._grouped = 1;
   this._groupIndex = 0;
+  this._orientation = 'bottom';
 
-  this._dataMap = {};
+  this._dataMap = {
+    x: {},
+    y: {},
+  };
+
+  this.orientation = (orientation) => {
+    if(isNull(orientation)) {
+      return this._orientation;
+    }
+    const orientations = ['bottom', 'left'];
+    this._orientation = orientations.indexOf(orientation) > -1 ? orientation : this._orientation;
+
+    return this;
+  }
 
   this.add = (chart) => {
     // console.log('chrtStack','add',chart, chart._area)
@@ -23,17 +37,29 @@ function chrtStack() {
       // console.log('chrtStack','data!', this._dataMap)
       if(!isNull(data)) {
           data = data.map(d => {
-            if(!this._dataMap[d.x]) {
-              this._dataMap[d.x] = {
+            if(!this._dataMap.x[d.x]) {
+              this._dataMap.x[d.x] = {
                 x: d.x,
                 values: [],
               }
             }
-            this._dataMap[d.x].values.push(d);
-            const y0 = !isNull(this._dataMap[d.x].y0) ? this._dataMap[d.x].y0 : 0;
-            this._dataMap[d.x].y0 = y0 + d.y;
-            // console.log(this._dataMap[d.x].y0,'->', y0,'+', d.y)
-            return Object.assign({}, d, { stacked_y: y0 + d.y, y0 })
+            this._dataMap.x[d.x].values.push(d);
+            const y0 = !isNull(this._dataMap.x[d.x].y0) ? this._dataMap.x[d.x].y0 : null;
+            this._dataMap.x[d.x].y0 = this._orientation !== 'bottom' ? null : (y0 || 0) + d.y;
+
+            if(!this._dataMap.y[d.y]) {
+              this._dataMap.y[d.y] = {
+                y: d.y,
+                values: [],
+              }
+            }
+            this._dataMap.y[d.y].values.push(d);
+            const x0 = !isNull(this._dataMap.y[d.y].x0) ? this._dataMap.y[d.y].x0 : null;
+            this._dataMap.y[d.y].x0 = this._orientation !== 'left' ? null : (x0 || 0) + d.x;
+
+
+
+            return Object.assign({}, d, { stacked_y: (y0 || 0) + d.y, y0, stacked_x: (x0 || 0) + d.x, x0})
           })
       }
       // console.log('CALLING DATA ON',chart,'WITH', data)
