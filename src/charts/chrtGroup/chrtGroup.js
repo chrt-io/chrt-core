@@ -1,4 +1,4 @@
-// import { isNull } from '~/helpers';
+import { isNull } from '~/helpers';
 import { add } from '../util';
 import chrtGeneric from '../chrtGeneric';
 
@@ -7,6 +7,16 @@ function chrtGroup() {
 
   chrtGeneric.call(this);
   this.type = 'group';
+  this._width = 1;
+
+  this.width = (width) => {
+    if(isNull(width)) {
+      return this.attr('width')();
+    }
+    this.attr('width', Math.min(Math.max(width, 0), 1))
+
+    return this;
+  }
 
   this.add = (chart) => {
     // console.log('chrtGroup','add',chart)
