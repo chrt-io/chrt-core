@@ -7,7 +7,7 @@ function chrtGroup() {
 
   chrtGeneric.call(this);
   this.type = 'group';
-  this._width = 1;
+  this.attr('width', 1);
 
   this.width = (width) => {
     if(isNull(width)) {
