@@ -26,16 +26,17 @@ export default function render(parent) {
     }
 
   } else {
-    const grid = (this.parentNode.objects || []).slice().reverse().find(obj => obj.type === 'grid');
-    if(grid && this.type === 'axis') {
-        // // console.log('THIS IS AN',this.type,'AND THERE IS A GRID',grid,'INSERT BEFORE',grid.node(), grid.node().nextSibling)
-        this.currentNode.insertBefore(this.g, grid.node().nextSibling);
-    } else {
-      // console.log('THIS IS A', this.type, 'PREPEND')
+  //   const grid = (this.parentNode.objects || []).slice().reverse().find(obj => obj.type === 'grid');
+  //   if(grid && this.type === 'axis') {
+  //       // // console.log('THIS IS AN',this.type,'AND THERE IS A GRID',grid,'INSERT BEFORE',grid.node(), grid.node().nextSibling)
+  //       this.currentNode.insertBefore(this.g, grid.node().nextSibling);
+  //   } else {
+  //     // console.log('THIS IS A', this.type, 'PREPEND')
+  //     this.currentNode.append(this.g);
+  //   }
       this.currentNode.append(this.g);
-    }
-
   }
+
   this.update();
   return this.parentNode;
 }
