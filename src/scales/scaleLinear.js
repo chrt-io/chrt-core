@@ -1,5 +1,5 @@
 import { DEFAULT_WIDTH, TICKS_DEFAULT } from '~/constants';
-import { isNull, hasNaN } from '~/helpers';
+import { isNull, hasNaN, hasNull } from '~/helpers';
 import { memoize } from '~/util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
@@ -39,11 +39,12 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
-  // console.log("fixedDomain", fixedDomain);
-  // console.log("domainExtent", domainExtent);
-  // console.log("currentDomain", currentDomain);
+  // console.log(name, "fixedDomain", fixedDomain);
+  // console.log(name, "domainExtent", domainExtent);
+  // console.log(name, "currentDomain", currentDomain);
   if (
     isNull(fixedDomain) ||
+    hasNull(fixedDomain) ||
     hasNaN(currentDomain) ||
     !domainExtent ||
     !domainExtent.length ||
@@ -112,7 +113,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log("currentDomain", currentDomain);
   }
 
-  // // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
+  // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
 
   // const numScale = new Heckbert(domainExtent);
   const eNumScale = new ExtendedWilkinson(domainExtent);
