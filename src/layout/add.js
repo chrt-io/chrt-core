@@ -1,18 +1,22 @@
 import { uuid, hasData } from '~/helpers';
 export default function add(obj) {
-  // console.log('LAYOUT ADD', obj)
+  //console.log('LAYOUT ADD', obj)
   const id = uuid();
   // console.log('adding', obj.type, id);
   // console.log('HERE!!!', obj.hasData(), obj.data())
+
+  // console.log('CALLING DATA on', obj)
+  // console.log('DATA', obj.hasData() ? obj.data() : this._orginalData)
+  // console.log('ACCESSOR', obj.accessor() || this._accessor)
+
+  const data = obj.hasData() ? obj.data() : this._orginalData;
+  //data = data.length ? data : this._orginalData
   obj
     .id(id)
     .parent(this)
     .node(this.currentNode)
-    .data(obj.hasData() ? obj.data() : this._orginalData, obj.accessor() || this._accessor)
-    // .data.apply(
-    //   COMPONENTS_W_DATA.indexOf(obj.type) === -1 ? null : obj,
-    //   [obj.data() || this._orginalData, obj.accessor() || this._accessor]
-    // )
+    .data(data  || this._orginalData)
+    //.data(obj.hasData() ? obj.data() : this._orginalData, obj.accessor() || this._accessor)
     .render(obj._stacked || obj._group);
   this.objects.push(obj);
 

@@ -4,22 +4,26 @@ export default function (data, accessor) {
   // console.log('---------------> data', data, accessor, this);
   if (!data) {
     // console.log('NO DATA return', hasData(this), this._data, hasData(this) ? this._data : this)
-    return hasData(this) ? (this._data || []) : this;
+    return hasData(this) ? (this._data || null) : this;
   }
   // TODO: not sure what this is doing...
   if(!hasData(this)) {
+    // console.log('NO HAS DATA')
     return this;
   }
+  // console.log('HAS DATA')
   // // console.log('chrt or series', this.type)
   // passing only accessor to inherit/reuse data
   if(typeof arguments[0] === 'function') {
-    // // console.log('ACCESSOR FUNCTION')
     this._accessor = arguments[0];
     return this;
   }
-  // // console.log('DATA', this, this._data, data);
+
   // data is passed
   this._orginalData = data;
+
+  // // console.log('DATA', this, this._data, data);
+
 
 
   // define accessor function to map values

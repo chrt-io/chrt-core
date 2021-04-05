@@ -13,17 +13,18 @@ import { scaleLinear, scaleLog, scaleOrdinal, scaleTime } from './scales';
 import { isNull, arraysEqual } from './helpers';
 
 export function Chrt(_data = [], _node) {
-  // // console.log('CHRT', _data);
+  // console.log('CHRT', _data);
   this.type = 'chrt';
   this._data = _data;
   this._orginalData = this._data;
   this.root = _node;
   this.currentNode = _node;
 
-  this._accessor = (d, i) => ({
-    x: !isNull(d) && Object.prototype.hasOwnProperty.call(d, 'x') ? d.x : i,
-    y: isNull(d) ? null : Object.prototype.hasOwnProperty.call(d, 'y') ? d.y : d
-  });
+  this._accessor = null;
+  // (d, i) => ({
+  //   x: !isNull(d) && Object.prototype.hasOwnProperty.call(d, 'x') ? d.x : i,
+  //   y: isNull(d) ? null : Object.prototype.hasOwnProperty.call(d, 'y') ? d.y : d
+  // });
 
   this.width = 500; // default width
   this.height = 300; // default height
