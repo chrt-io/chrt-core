@@ -22,7 +22,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   // TODO: this should be removed and calculated somewhere else
   range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
   range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
-  // // console.log(name,'RANGE',range)
+  // console.log(name,'RANGE',range)
 
   const currentDomain =
     _scale && !_scale.isLog()
@@ -141,22 +141,24 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   // console.log('AFTER WILK DOMAIN',  name, [...domainExtent])
 
-  const domainWidth = domainExtent[1] - domainExtent[0];
-  const direction = range[1] >= range[0] ? 1 : -1;
-  const rangeWidth =
-    range[1] -
-    range[0] -
-    (type === 'x'
-      ? this._margins.left + this._margins.right
-      : this._margins.top + this._margins.bottom) *
-      direction;
 
-  const startCoord =
-    range[0] +
-    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
 
   // // console.log('new this.scalingFunction', domainExtent, range, rangeWidth)
   const scalingFunction = (d) => {
+    const domainWidth = domainExtent[1] - domainExtent[0];
+    const direction = range[1] >= range[0] ? 1 : -1;
+    const rangeWidth =
+      range[1] -
+      range[0] -
+      (type === 'x'
+        ? this._margins.left + this._margins.right
+        : this._margins.top + this._margins.bottom) *
+        direction;
+    const startCoord =
+      range[0] +
+      (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
+
+
     const valueToDomain = (d - domainExtent[0]) / domainWidth;
     return startCoord + rangeWidth * valueToDomain;
   };
@@ -167,14 +169,14 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
       return _ticks;
     }
     const fixedTicks = Array.isArray(n) && n.length;
-    _ticks = fixedTicks ? n : eNumScale.ticks(n);
+    _ticks = fixedTicks ? n + 1 : eNumScale.ticks(n + 1);
 
 
     // TODO: Verify this, I can't remember why this was done.
     // if (_ticks.length > 1 && _ticks[0] < _ticks[1]) {
       // _ticks.reverse();
     // }
-    // console.log('TICKS', _ticks);
+    // console.log('#### TICKS', _ticks);
     return _ticks.map((value, index) => ({
       index,
       value,
