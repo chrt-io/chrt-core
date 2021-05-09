@@ -1,4 +1,4 @@
-import { data, node } from './util';
+import { data, node, help } from './util';
 import {
   append,
   add,
@@ -296,6 +296,10 @@ export function Chrt(_data = [], _node = create('div')) {
 
   this.getAxis = (name, orientation) => {
     return this.objects.find(obj => obj.type === 'axis' && obj.name === name && (!orientation || obj.orientation === orientation));
+  }
+
+  this.help = (obj) => {
+    help(obj ?? this);
   }
 
   this.class = (prefix) => {
