@@ -7,7 +7,7 @@ export default function size(...dimensions) {
       height: this.height
     }
   }
-  console.log('size', dimensions)
+  // console.log('size', dimensions)
   const [width, height, update = true] = dimensions;
 
   const oldWidth = this.width;
