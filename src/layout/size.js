@@ -7,12 +7,25 @@ export default function size(...dimensions) {
       height: this.height
     }
   }
-  const [width, height] = dimensions;
+  console.log('size', dimensions)
+  const [width, height, update = true] = dimensions;
+
   const oldWidth = this.width;
   const oldHeight = this.height;
 
-  this.width = width || oldWidth || DEFAULT_WIDTH;
-  this.height = height || oldHeight || DEFAULT_HEIGHT;
+  this.width = (width !== 'auto' ? width : null) || oldWidth || DEFAULT_WIDTH;
+  this.height = (height !== 'auto' ? height : null) || oldHeight || DEFAULT_HEIGHT;
+
+  this.autoWidth = null;
+  if(width === 'auto') {
+    this.autoWidth = 'auto';
+    this.width = this.root.parentElement?.clientWidth ?? this.width;
+  }
+  this.autoHeight = null;
+  if(height === 'auto') {
+    this.autoHeight = 'auto';
+    this.height = this.root.parentElement?.clientHeight ?? this.height;
+  }
 
   let svg = this.root.querySelector('svg');
   if(!svg) {
@@ -27,7 +40,8 @@ export default function size(...dimensions) {
 
 
   // if(!oldWidth || !oldHeight || oldWidth !== width || oldHeight !== height) {
+  if(update) {
     return this.update();
-  //}
+  }
   //return this;
 }

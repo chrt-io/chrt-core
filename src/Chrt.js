@@ -8,11 +8,12 @@ import {
   size,
   setMargins,
   setPadding,
+  create,
 } from './layout';
 import { scaleLinear, scaleLog, scaleOrdinal, scaleTime } from './scales';
 import { isNull, arraysEqual } from './helpers';
 
-export function Chrt(_data = [], _node) {
+export function Chrt(_data = [], _node = create('div')) {
   // console.log('CHRT', _data);
   this.type = 'chrt';
   this._data = _data;
@@ -28,6 +29,8 @@ export function Chrt(_data = [], _node) {
 
   this.width = 500; // default width
   this.height = 300; // default height
+
+
 
   this._margins = {
     top: 20,
@@ -255,6 +258,9 @@ export function Chrt(_data = [], _node) {
   };
 
   this.update = () => {
+    if(this.autoWidth || this.autoHeight) {
+      this.size(this.autoWidth || this.width, this.autoHeight || this.height, false)
+    }
     if(!Object.values(this.scales.x).length) {
       // console.log('no scales x -> create a default linear scale')
       this.x(null,[0, this.width])
@@ -303,6 +309,9 @@ export function Chrt(_data = [], _node) {
   }
 
   this.css = this.class;
+
+  // this sets size and svg with default size
+  size.apply(this, [this.width, this.height]).svg();
 }
 
 function chrt(data, node) {

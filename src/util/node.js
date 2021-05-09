@@ -9,8 +9,10 @@ export default function (node) {
   if (!node) {
     return this.g || this.root;
   }
+
+  node.appendChild(this.root)
+  // this.currentNode = this.root;
   this.root = node;
-  this.currentNode = this.root;
 
   return this;
 }
