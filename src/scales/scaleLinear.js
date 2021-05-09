@@ -169,7 +169,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
       return _ticks;
     }
     const fixedTicks = Array.isArray(n) && n.length;
-    _ticks = fixedTicks ? n + 1 : eNumScale.ticks(n + 1);
+    _ticks = fixedTicks ? n : eNumScale.ticks(n + 1);
 
 
     // TODO: Verify this, I can't remember why this was done.
