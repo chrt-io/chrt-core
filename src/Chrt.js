@@ -152,7 +152,7 @@ export function Chrt(_data = [], _node = create('div')) {
   //this.x = (domain, range, options = {}) => {
   this.x = (...args) => {
     if (args.length === 1 && isObject(args[0])) {
-      args = [args[0].domain, args[0].range, args[0].options];
+      args = [args[0].domain, args[0].range, args[0].options || args[0]];
     }
 
     const [domain, range, options = {}] = args || [];
@@ -203,11 +203,11 @@ export function Chrt(_data = [], _node = create('div')) {
   // this.y = (domain, range, options = {}) => {
   this.y = (...args) => {
     if (args.length === 1 && isObject(args[0])) {
-      args = [args[0].domain, args[0].range, args[0].options];
+      args = [args[0].domain, args[0].range, args[0].options || args[0]];
     }
 
     const [domain, range, options = {}] = args || [];
-    // console.log('calling this.y', domain, range, options)
+
     const transformation = options ? options.scale || 'linear' : 'linear';
     switch (transformation) {
       case 'log':

@@ -9,6 +9,15 @@ module.exports = {
             rootPathSuffix: './src/',
             rootPathPrefix: '~/'
           }
+        ],
+        [
+          '@babel/plugin-transform-runtime',
+          {
+            absoluteRuntime: false,
+            corejs: false,
+            helpers: true,
+            regenerator: true
+          }
         ]
       ]
     }
@@ -17,7 +26,9 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false,
+        targets: {
+          browsers: ['> .5% or last 3 versions, not IE <= 11']
+        }
       }
     ]
   ],
@@ -25,8 +36,17 @@ module.exports = {
     [
       'babel-plugin-root-import',
       {
-        rootPathSuffix: './src/',
+        rootPathSuffix: './src',
         rootPathPrefix: '~/'
+      }
+    ],
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        absoluteRuntime: false,
+        corejs: false,
+        helpers: false,
+        regenerator: true
       }
     ]
   ]

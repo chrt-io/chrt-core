@@ -15,11 +15,11 @@
   "scripts": {
     "test": "jest",
     "test:scales": "jest -i test/scales",
-    "pretest": "rollup -c",
     "postversion": "rollup -c",
     "build": "rollup -c",
     "lint": "eslint src --fix",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "dev": "budo test/chrts/index.js:bundle.js --live --dir test/chrts  -- -t [ babelify --extensions .js ]"
   },
   "husky": {
     "hooks": {
@@ -40,11 +40,15 @@
   "devDependencies": {
     "@babel/core": "^7.12.17",
     "@babel/plugin-transform-modules-commonjs": "^7.12.13",
+    "@babel/plugin-transform-runtime": "^7.14.3",
     "@babel/preset-env": "^7.12.17",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "babel-jest": "^26.6.3",
     "babel-plugin-root-import": "^6.6.0",
+    "babelify": "^10.0.0",
+    "budo": "^11.6.4",
+    "chrt": "0.0.58",
     "eslint": "^7.20.0",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
