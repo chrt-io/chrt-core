@@ -30,7 +30,7 @@ export default async function(container) {
     .add(chrt.xAxis())
     .add(chrt.yAxis())
     .add(
-      chrt.chrtColumns()
+      chrt.chrtLine()
         .data(data, d => ({
           x: d.x,
           y: d.y,
