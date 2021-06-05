@@ -81,4 +81,27 @@ describe('Testing linear scale', () => {
       expect(scales.x['x'](domain[1])).toBeGreaterThanOrEqual(range[1]);
     }
   })
+
+  test('Test if only domain is passed', async () => {
+    const mockElement = document.createElement('div');
+    const chart = Chrt()
+      .data([0,1,2,3,4,5])
+      .x([0,10])
+
+    const domain = chart.scales.x['x'].domain;
+
+    expect(domain).toStrictEqual([0,10]);
+  });
+
+  test('Test if ticks returns the list of ticks', async () => {
+    const mockElement = document.createElement('div');
+    const chart = Chrt()
+      .data([0,1,2,3,4,5])
+      .x([0,5])
+
+    const ticks = chart.scales.x['x'].ticks();
+    // console.log('ticks', ticks)
+    expect(ticks.length).toBeGreaterThanOrEqual(0);
+  });
+
 });

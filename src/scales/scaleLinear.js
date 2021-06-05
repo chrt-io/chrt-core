@@ -33,9 +33,10 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   // console.log('DOMAIN', name, [...domainExtent], this.scales[name])
   // console.log('FIXED DOMAIN', name, fixedDomain)
   // console.log('CURRENT DOMAIN', name, currentDomain);
-  if (arguments.length === 1) {
-    return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
-  }
+  // if (arguments.length === 1) {
+  //   // this code is never reached
+  //   return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
+  // }
 
   // if no domain defined or new domain is different from current domain
   // calculate the new domain based on all the data
@@ -165,9 +166,10 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   const ticks = (n = TICKS_DEFAULT) => {
     // TODO: n can never be null...this needs to be reviews, it doesn't work well, _ticks?!?
-    if (isNull(n) && _ticks.length > 0) {
-      return _ticks;
-    }
+    // if (isNull(n) && _ticks.length > 0) {
+    // // this code can never be reached
+    //   return _ticks;
+    // }
     const fixedTicks = Array.isArray(n) && n.length;
     _ticks = fixedTicks ? n : eNumScale.ticks(n + 1);
 
