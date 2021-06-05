@@ -1,7 +1,5 @@
 image: node:latest
 
-time_zone: 'UTC'
-
 stages:
   - build
 
