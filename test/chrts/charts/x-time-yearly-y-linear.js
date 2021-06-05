@@ -1,9 +1,9 @@
 import * as chrt from 'chrt';
 import Chrt from '~/Chrt';
 const years = 10;
-const data = new Array(52 * years).fill(1).map((d,i) => {
+const data = new Array((52 / 2) * years).fill(1).map((d,i) => {
   return {
-    x: new Date(2021 - years,0,i * 7),
+    x: new Date(2021 - years,0,i * 7 * 2),
     y: Math.sin((i % 360) / Math.PI) * 100,
   }
 })
