@@ -8,8 +8,6 @@ const data = new Array(24 * days).fill(1).map((d,i) => {
   }
 })
 
-console.log('data', data)
-
 export default async function(container) {
   return Chrt()
     .node(container)
