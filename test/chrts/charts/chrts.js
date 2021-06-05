@@ -4,4 +4,5 @@ export { default as xLinearYLog } from './x-linear-y-log.js';
 export { default as xLogYLinear } from './x-log-y-linear.js';
 export { default as xLogYLog } from './x-log-y-log.js';
 export { default as xOrdinalYLinear } from './x-ordinal-y-linear.js';
-export { default as xTimeYLinear } from './x-time-y-linear.js';
+export { default as xTimeYLinearMonthly } from './x-time-y-linear.js';
+export { default as xTimeYLinearYearly } from './x-time-yearly-y-linear.js';

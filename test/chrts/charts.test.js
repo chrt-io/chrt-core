@@ -5,7 +5,7 @@ function replaceIDWithMockId(str) {
 }
 
 // testing SVG snapshots of all the visual tests
-for(const key of Object.keys(chrts)) {
+for (const key of Object.keys(chrts)) {
   test(`Test ${key} SVG`, async () => {
     const mockElement = document.createElement('div');
     const chart = await chrts[key](mockElement);
