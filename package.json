@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "test": "jest",
+    "test": "TZ=UTC jest",
     "test:scales": "jest -i test/scales",
     "postversion": "rollup -c",
     "build": "rollup -c",
