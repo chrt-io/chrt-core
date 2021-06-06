@@ -8,3 +8,7 @@ export { default as xOrdinalYLinear } from './x-ordinal-y-linear.js';
 export { default as xTimeDailyYLinear } from './x-time-daily-y-linear.js';
 export { default as xTimeMonthlyYLinear } from './x-time-y-linear.js';
 export { default as xTimeYearlyYLinear } from './x-time-yearly-y-linear.js';
+export { default as xNamedYNamed } from './x-named-y-named.js';
+export { default as overrideDomainWithNewData } from './override-domain.js';
+export { default as xLinearYTime } from './x-linear-y-time.js';
+export { default as autoSize } from './auto-size.js';

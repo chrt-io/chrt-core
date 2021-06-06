@@ -1,6 +1,10 @@
 body {
   font-family: sans-serif;
 }
+.chart {
+  width: 500px;
+  height: 500px;
+}
 .chart svg {
   font-family: sans-serif;
   font-size: 12px;

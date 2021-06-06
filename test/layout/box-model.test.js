@@ -29,6 +29,16 @@ test('Test size', async () => {
   expect(chart.size()).toStrictEqual({ width: WIDTH, height: HEIGHT });
 });
 
+test('Test setWidth and setHeight', async () => {
+  const mockElement = document.createElement('div');
+  const chart = Chrt()
+    .node(mockElement)
+    .setWidth(WIDTH)
+    .setHeight(HEIGHT)
+
+  expect(chart.size()).toStrictEqual({ width: WIDTH, height: HEIGHT });
+});
+
 test('Test svg viewBox size', async () => {
   const mockElement = document.createElement('div');
   const chart = Chrt()

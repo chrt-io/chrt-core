@@ -3,19 +3,19 @@ import Chrt from '~/Chrt';
 
 const data = [
   {
-    x: 1,
+    x: 'a',
     y: 10
   },
   {
-    x: 2,
+    x: 'b',
     y: 14
   },
   {
-    x: 3,
+    x: 'c',
     y: 22
   },
   {
-    x: 4,
+    x: 'd',
     y: 18
   }
 ];
@@ -29,9 +29,16 @@ export default async function(container) {
     .add(chrt.yAxis())
     .add(
       chrt.chrtLine()
-        .data(data, d => ({
+        .data(data.slice(0,2), d => ({
           x: d.x,
           y: d.y,
+        }))
+    )
+    .add(
+      chrt.chrtLine()
+        .data(data, d => ({
+          x: d.x,
+          y: d.y * 5,
         }))
     );
 }
