@@ -52,8 +52,8 @@ export function Chrt(_data = [], _node = create('div')) {
     // console.log('----> _scaleLinear name:',name,'type:',type,domain,range,field)
     // console.log('this.scales', this.scales)
     const _scale = this.scales[type][name];
-    const oldDomain = _scale ? _scale.domain : [];
-    const oldRange = _scale ? _scale.range : [];
+    const oldDomain = _scale ? [..._scale.domain] : [];
+    const oldRange = _scale ? [..._scale.range] : [];
     scaleLinear.apply(this, [
       name,
       type,
@@ -82,8 +82,8 @@ export function Chrt(_data = [], _node = create('div')) {
     // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
 
     const _scale = this.scales[type][name];
-    const oldDomain = _scale ? _scale.domain : [];
-    const oldRange = _scale ? _scale.range : [];
+    const oldDomain = _scale ? [..._scale.domain] : [];
+    const oldRange = _scale ? [..._scale.range] : [];
     scaleLog.apply(this, [
       name,
       type,
@@ -107,8 +107,8 @@ export function Chrt(_data = [], _node = create('div')) {
   const _scaleOrdinal = (name, type, domain, range, field) => {
     // console.log('scaleOrdinal', name, type, domain, range, 'field:', field)
     const _scale = this.scales[type][name];
-    const oldDomain = _scale ? _scale.domain : [];
-    const oldRange = _scale ? _scale.range : [];
+    const oldDomain = _scale ? [..._scale.domain] : [];
+    const oldRange = _scale ? [..._scale.range] : [];
     scaleOrdinal.apply(this, [
       name,
       type,
@@ -116,7 +116,6 @@ export function Chrt(_data = [], _node = create('div')) {
       range,
       field
     ]);
-    // console.log('----->', this.scales)
     if (
       !isNull(_scale) &&
       (!arraysEqual(oldDomain, _scale.domain) ||
@@ -327,6 +326,9 @@ export function Chrt(_data = [], _node = create('div')) {
     return this;
   };
 
+  this.setWidth = width => size.call(this, width);
+  this.setHeight = height => size.call(this, null, height);
+
   this.css = this.class;
 
   // this sets size and svg with default size
@@ -346,8 +348,6 @@ Chrt.prototype = chrt.prototype = {
   svg,
   border,
   size,
-  setWidth: width => size(width),
-  setHeight: height => size(null, height),
   margins: setMargins,
   padding: setPadding
 };
