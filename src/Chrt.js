@@ -27,8 +27,8 @@ export function Chrt(_data = [], _node = create('div')) {
   //   y: isNull(d) ? null : Object.prototype.hasOwnProperty.call(d, 'y') ? d.y : d
   // });
 
-  this.width = 500; // default width
-  this.height = 300; // default height
+  this.width = null; // default width
+  this.height = null; // default height
 
   this._margins = {
     top: 20,
@@ -63,8 +63,8 @@ export function Chrt(_data = [], _node = create('div')) {
     ]);
     if (
       !isNull(_scale) &&
-      (!arraysEqual(oldDomain, _scale.domain) ||
-        !arraysEqual(oldRange, _scale.range))
+      (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
+        !arraysEqual(oldRange, this.scales[type][name].range))
     ) {
       this.objects.forEach(obj => obj.update());
     }
@@ -96,8 +96,8 @@ export function Chrt(_data = [], _node = create('div')) {
 
     if (
       !isNull(_scale) &&
-      (!arraysEqual(oldDomain, _scale.domain) ||
-        !arraysEqual(oldRange, _scale.range))
+      (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
+        !arraysEqual(oldRange, this.scales[type][name].range))
     ) {
       this.objects.forEach(obj => obj.update());
     }
@@ -105,8 +105,8 @@ export function Chrt(_data = [], _node = create('div')) {
   };
 
   const _scaleOrdinal = (name, type, domain, range, field) => {
-    // console.log('scaleOrdinal', name, type, domain, range, 'field:', field)
-    const _scale = this.scales[type][name];
+    // console.log('_scaleOrdinal', name, type, domain, range, 'field:', field)
+    let _scale = this.scales[type][name];
     const oldDomain = _scale ? [..._scale.domain] : [];
     const oldRange = _scale ? [..._scale.range] : [];
     scaleOrdinal.apply(this, [
@@ -118,8 +118,8 @@ export function Chrt(_data = [], _node = create('div')) {
     ]);
     if (
       !isNull(_scale) &&
-      (!arraysEqual(oldDomain, _scale.domain) ||
-        !arraysEqual(oldRange, _scale.range))
+      (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
+        !arraysEqual(oldRange, this.scales[type][name].range))
     ) {
       this.objects.forEach(obj => obj.update());
     }
@@ -129,14 +129,14 @@ export function Chrt(_data = [], _node = create('div')) {
   const _scaleTime = (name, type, domain, range, field) => {
     // console.log('scaleTime', name, type, domain, range, 'field:', field)
     const _scale = this.scales[type][name];
-    const oldDomain = _scale ? _scale.domain : [];
-    const oldRange = _scale ? _scale.range : [];
+    const oldDomain = _scale ? [..._scale.domain] : [];
+    const oldRange = _scale ? [..._scale.range] : [];
     scaleTime.apply(this, [name, type, domain || [], range, field]);
     // console.log('----->', this.scales)
     if (
       !isNull(_scale) &&
-      (!arraysEqual(oldDomain, _scale.domain) ||
-        !arraysEqual(oldRange, _scale.range))
+      (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
+        !arraysEqual(oldRange, this.scales[type][name].range))
     ) {
       this.objects.forEach(obj => obj.update());
     }
@@ -155,7 +155,6 @@ export function Chrt(_data = [], _node = create('div')) {
     }
 
     const [domain, range, options = {}] = args || [];
-
     const transformation = options ? options.scale || 'linear' : 'linear';
     switch (transformation) {
       case 'log':
@@ -179,7 +178,6 @@ export function Chrt(_data = [], _node = create('div')) {
           options.field || 'x'
         ]);
       case 'ordinal':
-        //console.log('this.x','ordinal', domain, options.name,options.field)
         return _scaleOrdinal.apply(this, [
           options.name || 'x',
           'x',
@@ -309,7 +307,7 @@ export function Chrt(_data = [], _node = create('div')) {
   };
 
   this.help = obj => {
-    help(obj ?? this);
+    return help(obj ?? this);
   };
 
   this.class = prefix => {
