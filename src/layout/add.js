@@ -9,13 +9,15 @@ export default function add(obj) {
   // console.log('DATA', obj.hasData() ? obj.data() : this._orginalData)
   // console.log('ACCESSOR', obj.accessor() || this._accessor)
 
-  const data = obj.hasData() ? obj.data() : this._orginalData;
+  const data = obj.hasData() ? obj.data() : this.data();
   //data = data.length ? data : this._orginalData
+  // console.log('DATA DATA DATA', data, this._data, this.data())
   obj
     .id(id)
     .parent(this)
     .node(this.currentNode)
-    .data(data  || this._orginalData)
+    .data(data || this.data())
+    //.data(this.data())
     //.data(obj.hasData() ? obj.data() : this._orginalData, obj.accessor() || this._accessor)
     .render(obj._stacked || obj._group);
   this.objects.push(obj);
