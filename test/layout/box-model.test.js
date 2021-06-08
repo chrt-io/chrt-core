@@ -29,6 +29,14 @@ test('Test size', async () => {
   expect(chart.size()).toStrictEqual({ width: WIDTH, height: HEIGHT });
 });
 
+test('Test auto size', async () => {
+  const mockElement = document.createElement('div');
+  const chart = Chrt()
+    .node(mockElement)
+    .size('auto', 'auto');
+  expect(chart.size()).toStrictEqual({ width: 600, height: 300 });
+});
+
 test('Test setWidth and setHeight', async () => {
   const mockElement = document.createElement('div');
   const chart = Chrt()

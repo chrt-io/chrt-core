@@ -1,3 +1,4 @@
+export { default as defaultSize } from './default-size.js';
 export { default as xDefaultYDefault } from './x-default-y-default.js';
 export { default as dataPassedDirectylToChrt } from './data-to-chrt.js';
 export { default as xLinearYLinear } from './x-linear-y-linear.js';
@@ -12,3 +13,4 @@ export { default as xNamedYNamed } from './x-named-y-named.js';
 export { default as overrideDomainWithNewData } from './override-domain.js';
 export { default as xLinearYTime } from './x-linear-y-time.js';
 export { default as autoSize } from './auto-size.js';
+export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
