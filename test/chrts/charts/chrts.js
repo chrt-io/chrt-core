@@ -14,3 +14,4 @@ export { default as overrideDomainWithNewData } from './override-domain.js';
 export { default as xLinearYTime } from './x-linear-y-time.js';
 export { default as autoSize } from './auto-size.js';
 export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
+export { default as nullValues } from './null-values.js';
