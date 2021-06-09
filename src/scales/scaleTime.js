@@ -84,18 +84,18 @@ export default function scale(
         ? +d[field || name]
         : Math.min(
             ...[
-              +d[field || name],
+              !isNull(d) ? +d[field || name] : null,
               domainExtent[0],
-              +d[`stacked_${field || name}`],
+              !isNull(d) ? +d[`stacked_${field || name}`] : null,
             ].filter((value) => !isNull(value))
           );
       domainExtent[1] = isNull(domainExtent[1])
         ? +d[field || name]
         : Math.max(
             ...[
-              +d[field || name],
+              !isNull(d) ? +d[field || name] : null,
               domainExtent[1],
-              +d[`stacked_${field || name}`],
+              !isNull(d) ? +d[`stacked_${field || name}`] : null,
             ].filter((value) => !isNull(value))
           );
     });
@@ -113,18 +113,18 @@ export default function scale(
             ? +d[field || obj.fields[name]]
             : Math.min(
                 ...[
-                  +d[field || obj.fields[name]],
+                  !isNull(d) ? +d[field || obj.fields[name]] : null,
                   domainExtent[0],
-                  +d[`stacked_${field || obj.fields[name]}`],
+                  !isNull(d) ? +d[`stacked_${field || obj.fields[name]}`] : null,
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
           domainExtent[1] = isNull(domainExtent[1])
             ? d[field || obj.fields[name]]
             : Math.max(
                 ...[
-                  +d[field || obj.fields[name]],
+                  !isNull(d) ? +d[field || obj.fields[name]] : null,
                   domainExtent[1],
-                  +d[`stacked_${field || obj.fields[name]}`],
+                  !isNull(d) ? +d[`stacked_${field || obj.fields[name]}`] : null,
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
         });
@@ -153,18 +153,18 @@ export default function scale(
         ? d[field || name]
         : Math.min(
             ...[
-              d[field || name],
+              !isNull(d) ? d[field || name] : null,
               domainExtent[0],
-              d[`stacked_${field || name}`],
+              !isNull(d) ? d[`stacked_${field || name}`] : null,
             ].filter((value) => !isNull(value))
           );
       domainExtent[1] = isNull(domainExtent[1])
         ? d[field || name]
         : Math.max(
             ...[
-              d[field || name],
+              !isNull(d) ? d[field || name] : null,
               domainExtent[1],
-              d[`stacked_${field || name}`],
+              !isNull(d) ? d[`stacked_${field || name}`] : null,
             ].filter((value) => !isNull(value))
           );
     });

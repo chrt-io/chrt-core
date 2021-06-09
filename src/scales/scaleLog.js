@@ -73,18 +73,18 @@ export default function scale(name, type, domain, range, field, transformation =
             ? d[obj.fields[field || name]]
             : Math.min(
                 ...[
-                  d[field || obj.fields[name]],
+                  !isNull(d) ? d[field || obj.fields[name]] : null,
                   domainExtent[0],
-                  d[`stacked_${field || obj.fields[name]}`],
+                  !isNull(d) ? d[`stacked_${field || obj.fields[name]}`] : null,
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
           domainExtent[1] = isNull(domainExtent[1])
             ? d[obj.fields[field || name]]
             : Math.max(
                 ...[
-                  d[field || obj.fields[name]],
+                  !isNull(d) ? d[field || obj.fields[name]] : null,
                   domainExtent[1],
-                  d[`stacked_${field || obj.fields[name]}`],
+                  !isNull(d) ? d[`stacked_${field || obj.fields[name]}`] : null,
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
         });
