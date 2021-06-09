@@ -60,7 +60,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
         isNull(domainExtent[0])
           ? d[field || name]
           : Math.min(
-              ...[d[field || name], domainExtent[0], d[`stacked_${field || name}`]].filter(
+              ...[!isNull(d) ? d[field || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
                 (value) => !isNull(value)
               )
             );
@@ -68,7 +68,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
         isNull(domainExtent[1])
           ? d[field || name]
           : Math.max(
-              ...[d[field || name], domainExtent[1], d[`stacked_${field || name}`]].filter(
+              ...[!isNull(d) ? d[field || name] : null, domainExtent[1], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
                 (value) => !isNull(value)
               )
             );
