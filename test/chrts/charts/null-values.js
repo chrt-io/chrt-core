@@ -59,6 +59,8 @@ const data = [
     y: null
   },
   null,
+  null,
+  null,
   {
     x: 15,
     y: 22
@@ -68,11 +70,11 @@ const data = [
 export default async function(container) {
   return Chrt()
     .node(container)
-    .data(data, d => (d ? {
-      x: d.x,
-      y: d.y,
-    } : null))
+    .data(data)
     .size(600, 200)
     .add(chrt.xAxis(16))
     .add(chrt.yAxis())
+    .add(
+      chrt.chrtPoints()
+    );
 }

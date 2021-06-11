@@ -6,12 +6,15 @@ const data = [0,3,5,3,7,9,2,5];
 export default async function(container) {
   const chart = Chrt()
     .node(container)
-    .data(data)
+    .data([10])
     .size(600, 200)
-    .add(chrt.xAxis(8))
-    .add(chrt.yAxis())
+    .add(chrt.xAxis(3))
+    .add(chrt.yAxis(3))
     .add(
-      chrt.chrtLine()
-    );
+      chrt.chrtPoints()
+    )
+
+  // console.log(chart)
+
   return chart
 }

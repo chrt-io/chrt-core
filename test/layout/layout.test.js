@@ -38,6 +38,6 @@ test('Test default padding', async () => {
     // .padding({})
     .add(chrt.chrtLine().data([0,1,2,3].map(d => ({x:d,y:20}))))
   const path = mockElement.querySelector('path[data-id="path-0"]');
-  expect(path.getAttribute('d')).toStrictEqual('M40,0L220,0L400,0L580,0');
+  expect(path.getAttribute('d')).toStrictEqual('M40,150L220,150L400,150L580,150');
 
 });

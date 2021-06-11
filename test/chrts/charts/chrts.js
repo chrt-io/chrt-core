@@ -15,3 +15,5 @@ export { default as xLinearYTime } from './x-linear-y-time.js';
 export { default as autoSize } from './auto-size.js';
 export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
 export { default as nullValues } from './null-values.js';
+export { default as noData } from './no-data.js';
+export { default as oneDataPoint } from './one-data-point.js';
