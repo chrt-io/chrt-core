@@ -21,11 +21,10 @@ export function Chrt(_data = [], _node = create('div')) {
   this.root = _node;
   this.currentNode = _node;
 
-  this._accessor = null;
-  // (d, i) => ({
-  //   x: !isNull(d) && Object.prototype.hasOwnProperty.call(d, 'x') ? d.x : i,
-  //   y: isNull(d) ? null : Object.prototype.hasOwnProperty.call(d, 'y') ? d.y : d
-  // });
+  this._accessor = (d, i) => ({
+    x: !isNull(d) && Object.prototype.hasOwnProperty.call(d, 'x') ? d.x : i,
+    y: isNull(d) ? null : (Object.prototype.hasOwnProperty.call(d, 'y') ? d.y : d)
+  });
 
   this.width = null; // default width
   this.height = null; // default height

@@ -56,12 +56,13 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
     this._data.forEach((d) => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
+      // console.log('getting min of', [!isNull(d) ? d[field || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${field || name}`] : null])
       domainExtent[0] =
         isNull(domainExtent[0])
           ? d[field || name]
           : Math.min(
               ...[!isNull(d) ? d[field || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
-                (value) => !isNull(value)
+                (value) => !isNull(value) && !isNaN(value)
               )
             );
       domainExtent[1] =
@@ -69,7 +70,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
           ? d[field || name]
           : Math.max(
               ...[!isNull(d) ? d[field || name] : null, domainExtent[1], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
-                (value) => !isNull(value)
+                (value) => !isNull(value) && !isNaN(value)
               )
             );
     });
@@ -112,6 +113,18 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log(this.objects)
     // console.log("domainExtent", domainExtent);
     // console.log("currentDomain", currentDomain);
+  }
+
+  if(domainExtent[0] === domainExtent[1]) {
+    if(domainExtent[0] < 0) {
+      domainExtent[1] = Math.abs(domainExtent[1]);
+    } else if (domainExtent[0] === 0) {
+      domainExtent[0] = -1;
+      domainExtent[1] = 1;
+    } else {
+      domainExtent[0] = 0;
+      domainExtent[1] = domainExtent[1] * 2;
+    }
   }
 
   // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])

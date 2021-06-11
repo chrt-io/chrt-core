@@ -1,7 +1,22 @@
-export default function(data, accessor) {
+import {hasData} from '~/helpers';
+
+export default function (data, accessor) {
   // console.log('---------------> data', data, accessor, this);
   if (!data) {
-    return this._data;
+    // console.log('NO DATA return', hasData(this), this._data, hasData(this) ? this._data : this)
+    return hasData(this) ? (this._data || null) : this;
+  }
+  // TODO: not sure what this is doing...
+  if(!hasData(this)) {
+    // console.log('NO HAS DATA')
+    return this;
+  }
+  // console.log('HAS DATA')
+  // // console.log('chrt or series', this.type)
+  // passing only accessor to inherit/reuse data
+  if(typeof arguments[0] === 'function') {
+    this._accessor = arguments[0];
+    return this;
   }
 
   // data is passed
@@ -9,28 +24,15 @@ export default function(data, accessor) {
 
   // // console.log('DATA', this, this._data, data);
 
-  const defaultAccessorFunction = (d, i) => {
-    if (typeof d !== 'object') {
-      return {
-        x: i,
-        y: d
-      };
-    }
-    return {
-      x: d.x ?? i,
-      y: d.y ?? d
-    };
-  };
-
   // define accessor function to map values
   const accessorFunction = accessor || this._accessor;
-  this._accessor = accessorFunction ?? defaultAccessorFunction;
-  this._data = data.map((d, i, arr) => {
-    if (d instanceof Object) {
-      return Object.assign({}, d, this._accessor(d, i, arr));
+  this._accessor = accessorFunction;
+  this._data = accessorFunction ? data.map((d, i, arr) => {
+    if(d instanceof Object) {
+      return Object.assign({}, d, accessorFunction(d, i, arr));
     }
-    return this._accessor(d, i, arr);
-  });
+    return accessorFunction(d, i, arr);
+  }) : data;
 
   // console.log('DATA', this._data)
 
