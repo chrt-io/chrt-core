@@ -13,6 +13,7 @@ export default async function(container) {
     .node(container)
     .size(600, 400)
     .y({scale:'time'})
+    .add(chrt.xAxis())
     .add(chrt.yAxis()
       .interval('year')
       .format(d => new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(d))
