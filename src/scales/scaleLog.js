@@ -1,9 +1,10 @@
+import { DEFAULT_WIDTH, TICKS_DEFAULT } from '~/constants';
 import logTicks from './util/logTicks';
 import { baseLog } from '~/helpers/math';
 import { memoize } from '~/util';
 import { isNull, hasNaN } from '~/helpers';
 
-export default function scale(name, type, domain, range, field, transformation = 'log10') {
+export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = 'log10') {
   // console.log('LOG SCALE', name, type, domain, range, 'field:', field, transformation);
   // console.log('this.scales[',name,'].domain','=',this.scales[name].domain, 'isLog?',this.scales[name].isLog())
 
@@ -132,10 +133,10 @@ export default function scale(name, type, domain, range, field, transformation =
     return startCoord + rangeWidth * valueToDomain;
   };
 
-  const ticks = (n) => {
-    if (isNull(n) && _ticks.length > 0) {
-      return _ticks;
-    }
+  const ticks = (n = TICKS_DEFAULT) => {
+    // if (isNull(n) && _ticks.length > 0) {
+    //   return _ticks;
+    // }
     _ticks = numScale.ticks(n).map((value, index) => ({
       index,
       value,
