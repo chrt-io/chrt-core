@@ -24,8 +24,8 @@ export default function add(obj) {
 
   // TODO: verify if the obj.updater condition is needed
 
-  //if(hasData(obj) || obj.updater) {
-  if(hasData(obj)) {
+  if(hasData(obj) || obj.updater) {
+  //if(hasData(obj)) {
     // // console.log('BECAUSE THE OBJ HAS DATA > UPDATE')
     return this.update();
   }
