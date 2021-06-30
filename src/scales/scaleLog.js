@@ -2,23 +2,25 @@ import { DEFAULT_WIDTH, TICKS_DEFAULT } from '~/constants';
 import logTicks from './util/logTicks';
 import { baseLog } from '~/helpers/math';
 import { memoize } from '~/util';
-import { isNull, hasNaN } from '~/helpers';
+import { isNull, hasNaN, isInfinity } from '~/helpers';
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = 'log10') {
   // console.log('LOG SCALE', name, type, domain, range, 'field:', field, transformation);
   // console.log('this.scales[',name,'].domain','=',this.scales[name].domain, 'isLog?',this.scales[name].isLog())
 
   const _scale = this.scales[type][name];
-  // console.log(`LOG: this.scales[${type}][${name}]=`,_scale, transformation);
-  const log = baseLog();
-
+  // console.log(`LOG: this.scales[${type}][${name}]=`,_scale);
+  // console.log('transformation', transformation, transformation.replace(/log/,''))
+  const base = +(transformation === 'log' ? 'log10' : transformation).replace(/log/,'');
+  const log = baseLog(base);
+  // console.log('BASE', base)
   const fixedDomain =
     domain || (_scale ? _scale.fixedDomain : null);
   // console.log('setting fixedDomain to', fixedDomain)
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
-    //domain = [0, 1]; // not sure anymore about this
+    // domain = [0, 1]; // not sure anymore about this
   }
 
   let _ticks = [];
@@ -65,7 +67,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
                 )
               );
       });
-
+    // console.log('AFTER GLOBAL DATA DOMAIN', [...domainExtent])
     this.objects.forEach((obj) => {
       const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
       if (_data) {
@@ -77,7 +79,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
                   !isNull(d) ? d[field || obj.fields[name]] : null,
                   domainExtent[0],
                   !isNull(d) ? d[`stacked_${field || obj.fields[name]}`] : null,
-                ].filter((value) => !isNull(value) && !hasNaN(value))
+                ].filter((value) => !isNull(value) && !hasNaN(value) && value !== 0)
               );
           domainExtent[1] = isNull(domainExtent[1])
             ? d[obj.fields[field || name]]
@@ -86,15 +88,15 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
                   !isNull(d) ? d[field || obj.fields[name]] : null,
                   domainExtent[1],
                   !isNull(d) ? d[`stacked_${field || obj.fields[name]}`] : null,
-                ].filter((value) => !isNull(value) && !hasNaN(value))
+                ].filter((value) => !isNull(value) && !hasNaN(value) && value !== 0)
               );
         });
       }
     });
-    // console.log('2 domainExtent ->', domainExtent[0], domainExtent[1])
+    // console.log('AFTER OBJECTS ->', domainExtent[0], domainExtent[1])
   }
 
-  const numScale = new logTicks(domainExtent);
+  const numScale = new logTicks(domainExtent);//, TICKS_DEFAULT, base);
 
   // re-assign domain based on max/min of logTicks nice scale
   // domainExtent[0] = numScale.getMin();
@@ -127,21 +129,24 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   // // console.log('new this.scalingFunction', domainExtent, range, rangeWidth)
   const scalingFunction = (d) => {
-    const valueToDomain = (log(d) - log(domainExtent[0])) / domainWidth;
-    //// // console.log('LOG scalingFunction',domainExtent, d,log(d),log(domainExtent[0]),log(domainExtent[1]),valueToDomain);
-    // // console.log('LOG', d, startCoord  + rangeWidth * valueToDomain)
-    return startCoord + rangeWidth * valueToDomain;
+    //if(d > 0) {
+      if(isInfinity(log(domainExtent[0])) || isInfinity(log(d))) {
+        return NaN;
+      }
+      const valueToDomain = (log(d) - log(domainExtent[0])) / domainWidth;
+      //// // console.log('LOG scalingFunction',domainExtent, d,log(d),log(domainExtent[0]),log(domainExtent[1]),valueToDomain);
+      // // console.log('LOG', d, startCoord  + rangeWidth * valueToDomain)
+      return startCoord + rangeWidth * valueToDomain;
+    // }
+    //return null;
   };
 
   const ticks = (n = TICKS_DEFAULT) => {
-    // if (isNull(n) && _ticks.length > 0) {
-    //   return _ticks;
-    // }
     _ticks = numScale.ticks(n).map((value, index) => ({
       index,
       value,
       x: scalingFunction(value),
-      isMinor: log(value) % 1,
+      isMinor: log(value) % 1 // === 0,
     }));
 
     return _ticks;

@@ -1,7 +1,8 @@
 // Math.log() function returns the natural logarithm (base e) of a number,
-
+const DEFAULT_LOG_BASE = 10;
 // generic function for log with multiple bases
-export function baseLog(base = 10) {
+export function baseLog(base = DEFAULT_LOG_BASE) {
+  base = isNaN(base) ? DEFAULT_LOG_BASE : base;
   return base === Math.E
     ? Math.log
     : (base === 10 && log10) ||

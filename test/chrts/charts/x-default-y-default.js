@@ -21,7 +21,7 @@ const data = [
 ];
 
 export default async function(container) {
-  return Chrt()
+  return chrt.Chrt()
     .node(container)
     .size(600, 200)
     .add(chrt.xAxis())
