@@ -58,16 +58,19 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('CALCULATE DOMAIN BASED ON OBJECTS', this.objects)
     this.objects.forEach((obj) => {
       const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
+      // console.log('OBJ', obj, _data)
       if (_data) {
         _data.forEach((d) => {
-          if(domainExtent.indexOf(d[obj.fields[type]]) === -1) {
-            domainExtent.push(d[obj.fields[type]]);
+          // console.log('test',type,name,'||',obj.fields[name],'->',d[field || obj.fields[name]],'in',domainExtent)
+          const datum = d[field || obj.fields[name]] ?? d;
+          if(domainExtent.indexOf(datum) === -1) {
+            domainExtent.push(datum);
           }
         });
       }
     });
 
-    // console.log('DOMAIN EXTENT', name, domainExtent)
+    // console.log('DOMAIN EXTENT AFTER OBJECTS', name, domainExtent.join(','))
   }
 
   const domainWidth = domainExtent.length;
@@ -96,6 +99,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     if (isNull(n) && _ticks.length > 0) {
       return _ticks;
     }
+    // console.log('calculate ticks', domainExtent)
     _ticks = domainExtent;
     return _ticks.map((value, index) => ({
       index,
