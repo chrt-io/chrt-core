@@ -4,19 +4,19 @@ import Chrt from '~/Chrt';
 const data = [
   {
     x: 'a',
-    y: 10
+    y: 'x'
   },
   {
     x: 'b',
-    y: 14
+    y: 'y'
   },
   {
     x: 'c',
-    y: 22
+    y: 'z'
   },
   {
     x: 'd',
-    y: 18
+    y: 'j'
   }
 ];
 
@@ -26,6 +26,7 @@ export default async function(container) {
     .size(600, 200)
     .data(data)
     .x({scale:'ordinal'})
+    .y({scale:'ordinal'})
     .add(chrt.xAxis())
     .add(chrt.yAxis())
     // .add(
