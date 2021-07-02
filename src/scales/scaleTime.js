@@ -80,24 +80,22 @@ export default function scale(
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
     this._data.forEach((d) => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
-      domainExtent[0] = isNull(domainExtent[0])
-        ? +d[field || name]
-        : Math.min(
-            ...[
-              !isNull(d) ? +d[field || name] : null,
-              domainExtent[0],
-              !isNull(d) ? +d[`stacked_${field || name}`] : null,
-            ].filter((value) => !isNull(value))
-          );
-      domainExtent[1] = isNull(domainExtent[1])
-        ? +d[field || name]
-        : Math.max(
-            ...[
-              !isNull(d) ? +d[field || name] : null,
-              domainExtent[1],
-              !isNull(d) ? +d[`stacked_${field || name}`] : null,
-            ].filter((value) => !isNull(value))
-          );
+      domainExtent[0] =
+        isNull(domainExtent[0])
+          ? d[field || name]
+          : Math.min(
+              ...[!isNull(d) ? d[field || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
+                (value) => !isNull(value) && !isNaN(value)
+              )
+            );
+      domainExtent[1] =
+        isNull(domainExtent[1])
+          ? d[field || name]
+          : Math.max(
+              ...[!isNull(d) ? d[field || name] : null, domainExtent[1], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
+                (value) => !isNull(value) && !isNaN(value)
+              )
+            );
     });
 
     // console.log('AFTER DATA DOMAIN EXTENT', name, domainExtent)
@@ -307,6 +305,7 @@ export default function scale(
     if (!domainExtent.length) {
       return [];
     }
+    // console.log('ticks', n, interval)
     const _domainExtent = calculateTimeDomain(interval);
     // console.log('time domain', _domainExtent, _domainExtent.map(d => new Date(d)))
     const _domainWidth = _domainExtent[1] - _domainExtent[0];
