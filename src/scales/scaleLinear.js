@@ -214,9 +214,8 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   scalingFunction.range = range;
   scalingFunction.step = eNumScale.getStep();
   scalingFunction.barwidth =
-    scalingFunction(domainExtent[0] + scalingFunction.step) -
-    scalingFunction(domainExtent[0]);
-
+    Math.abs(scalingFunction(domainExtent[0] + scalingFunction.step) -
+    scalingFunction(domainExtent[0]));
   scalingFunction.ticks = memoize(ticks);
   this.scales[type][name] = scalingFunction;
   return this;
