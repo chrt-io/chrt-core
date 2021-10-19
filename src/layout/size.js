@@ -1,4 +1,4 @@
-import {DEFAULT_WIDTH, DEFAULT_HEIGHT} from '~/constants';
+import {DEFAULT_WIDTH, DEFAULT_HEIGHT} from '../constants';
 
 export default function size(...dimensions) {
   if(!dimensions.length) {

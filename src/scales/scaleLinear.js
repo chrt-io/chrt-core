@@ -1,6 +1,6 @@
-import { DEFAULT_WIDTH, TICKS_DEFAULT } from '~/constants';
-import { isNull, hasNaN, hasNull } from '~/helpers';
-import { memoize } from '~/util';
+import { DEFAULT_WIDTH, TICKS_DEFAULT } from '../constants';
+import { isNull, hasNaN, hasNull } from '../helpers';
+import { memoize } from '../util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
 

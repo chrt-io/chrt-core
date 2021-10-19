@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import Chrt from '~/Chrt';
+import Chrt from '../../../src/Chrt';
 const days = 28;
 const data = new Array(24 * days).fill(1).map((d,i) => {
   return {

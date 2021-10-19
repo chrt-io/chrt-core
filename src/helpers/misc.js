@@ -1,4 +1,4 @@
-import {COMPONENTS_W_DATA} from '~/constants';
+import {COMPONENTS_W_DATA} from '../constants';
 
 export function isNull(value) {
   return value === null || value == null || typeof value === 'undefined';

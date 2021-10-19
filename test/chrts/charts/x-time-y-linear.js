@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import Chrt from '~/Chrt';
+import Chrt from '../../../src/Chrt';
 
 const data = new Array(120).fill(1).map((d,i) => {
   return {

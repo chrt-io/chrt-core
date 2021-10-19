@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import Chrt from '~/Chrt';
+import Chrt from '../../../src/Chrt';
 
 export default async function(container) {
   const chart = Chrt()

@@ -1,4 +1,4 @@
-import { uuid, hasData } from '~/helpers';
+import { uuid, hasData } from '../helpers';
 export default function add(obj) {
   //console.log('LAYOUT ADD', obj)
   const id = uuid();

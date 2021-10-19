@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import Chrt from '~/Chrt';
+import Chrt from '../../../src/Chrt';
 
 const data = [
   {

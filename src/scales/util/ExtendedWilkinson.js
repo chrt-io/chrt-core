@@ -1,4 +1,4 @@
-import { TICKS_DEFAULT } from '~/constants';
+import { TICKS_DEFAULT } from '../../constants';
 export default function ExtendedWilkinson(
   [dmin, dmax],
   ticksN = TICKS_DEFAULT,

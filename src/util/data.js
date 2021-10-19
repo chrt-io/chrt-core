@@ -1,4 +1,4 @@
-import {hasData} from '~/helpers';
+import {hasData} from '../helpers';
 
 export default function (data, accessor) {
   // console.log('---------------> data', data, accessor, this);

@@ -1,5 +1,5 @@
-import { DEFAULT_WIDTH } from '~/constants';
-import { isNull, arraysEqual } from '~/helpers';
+import { DEFAULT_WIDTH } from '../constants';
+import { isNull, arraysEqual } from '../helpers';
 // import { memoize } from '~/util';
 //import Heckbert from './util/Heckbert';
 //import ExtendedWilkinson from './util/ExtendedWilkinson';

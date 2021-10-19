@@ -1,8 +1,8 @@
-import { DEFAULT_WIDTH, TICKS_DEFAULT } from '~/constants';
+import { DEFAULT_WIDTH, TICKS_DEFAULT } from '../constants';
 import logTicks from './util/logTicks';
-import { baseLog } from '~/helpers/math';
-import { memoize } from '~/util';
-import { isNull, hasNaN, isInfinity } from '~/helpers';
+import { baseLog } from '../helpers/math';
+import { memoize } from '../util';
+import { isNull, hasNaN, isInfinity } from '../helpers';
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = 'log10') {
   // console.log('LOG SCALE', name, type, domain, range, 'field:', field, transformation);

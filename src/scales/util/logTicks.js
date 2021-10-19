@@ -1,5 +1,5 @@
-import { TICKS_DEFAULT } from '~/constants';
-import { baseLog, basePow } from '~/helpers/math';
+import { TICKS_DEFAULT } from '../../constants';
+import { baseLog, basePow } from '../../helpers/math';
 
 const DEFAULT_BASE = 10;
 const DEFAULT_MIN = 1;

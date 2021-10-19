@@ -1,4 +1,4 @@
-import { isNull } from '~/helpers';
+import { isNull } from '../helpers';
 
 export default function setPadding(padding, saveOriginal = false) {
   if(isNull(padding)) {

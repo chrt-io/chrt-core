@@ -34,13 +34,6 @@ module.exports = {
   ],
   plugins: [
     [
-      'babel-plugin-root-import',
-      {
-        rootPathSuffix: './src',
-        rootPathPrefix: '~/'
-      }
-    ],
-    [
       '@babel/plugin-transform-runtime',
       {
         absoluteRuntime: false,

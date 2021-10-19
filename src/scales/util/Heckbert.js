@@ -1,5 +1,5 @@
-import { TICKS_DEFAULT } from '~/constants';
-import { log10 } from '~/helpers/math';
+import { TICKS_DEFAULT } from '../../constants';
+import { log10 } from '../../helpers/math';
 
 export default function Heckbert([dmin, dmax], ticksNumber) {
   this.ticksNumber = ticksNumber || TICKS_DEFAULT;

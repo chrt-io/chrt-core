@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import Chrt from '~/Chrt';
+import Chrt from '../../../src/Chrt';
 const years = 10;
 const data = new Array((52 / 2) * years).fill(1).map((d,i) => {
   return {
