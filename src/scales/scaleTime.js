@@ -117,7 +117,7 @@ export default function scale(
                 ].filter((value) => !isNull(value) && !hasNaN(value))
               );
           domainExtent[1] = isNull(domainExtent[1])
-            ? d[field || obj.fields[name]]
+            ? +d[field || obj.fields[name]]
             : Math.max(
                 ...[
                   !isNull(d) ? +d[field || obj.fields[name]] : null,
@@ -129,13 +129,29 @@ export default function scale(
       }
     });
 
-    // console.log('AFTER OBJS DOMAIN EXTENT', name, field, domainExtent)
+    // console.log('AFTER OBJS DOMAIN EXTENT', name, field, [...domainExtent])
   } else {
     // console.log('FAILED IF BECAUSE')
     // console.log(this.objects)
     // console.log("domainExtent", domainExtent);
     // console.log("currentDomain", currentDomain);
   }
+
+  if(domainExtent.length > 1 && domainExtent[0] === domainExtent[1]) {
+    if(domainExtent[0] < 0) {
+      domainExtent[1] = Math.abs(domainExtent[1]);
+    } else if (domainExtent[0] === 0) {
+      domainExtent[0] = -1;
+      domainExtent[1] = 1;
+    } else {
+      domainExtent[0] = domainExtent[0] - 1;
+      domainExtent[1] = domainExtent[1] + 1;
+    }
+
+    // console.log('SAME domainExtent, so ->', domainExtent)
+  }
+
+
 
   if (
     isNull(fixedDomain) ||
