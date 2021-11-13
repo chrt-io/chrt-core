@@ -8,6 +8,7 @@
   "jsdelivr": "dist/chrt-core.min.js",
   "unpkg": "dist/chrt-core.min.js",
   "exports": {
+    "./package.json": "./package.json",
     "umd": "./dist/chrt-core.min.js",
     "default": "./dist/chrt-core.esm.js"
   },
