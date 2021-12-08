@@ -10,7 +10,7 @@ import {
   setPadding,
   create
 } from './layout';
-import { scaleLinear, scaleLog, scaleOrdinal, scaleTime } from './scales';
+import { scaleLinear, scaleLog, scaleOrdinal, scaleTime, scalePow } from './scales';
 import { isNull, arraysEqual } from './helpers';
 
 export function Chrt(_data = [], _node = create('div')) {
@@ -60,6 +60,39 @@ export function Chrt(_data = [], _node = create('div')) {
       range,
       field
     ]);
+    if (
+      !isNull(_scale) &&
+      (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
+        !arraysEqual(oldRange, this.scales[type][name].range))
+    ) {
+      this.objects.forEach(obj => obj.update());
+    }
+    return this;
+  };
+
+  const _scaleSqrt = (
+    name,
+    type,
+    domain,
+    range,
+    field,
+    transformation = 'sqrt'
+  ) => {
+    // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
+
+    const _scale = this.scales[type][name];
+    const oldDomain = _scale ? [..._scale.domain] : [];
+    const oldRange = _scale ? [..._scale.range] : [];
+    scalePow.apply(this, [
+      name,
+      type,
+      domain,
+      range,
+      field,
+      transformation,
+      0.5
+    ]);
+
     if (
       !isNull(_scale) &&
       (!arraysEqual(oldDomain, this.scales[type][name].domain) ||
@@ -147,8 +180,7 @@ export function Chrt(_data = [], _node = create('div')) {
     return prototype === '[object Object]';
   }
 
-  //this.x = (domain, range, options = {}) => {
-  this.x = (...args) => {
+  this.scale = (...args) => {
     if (args.length === 1 && isObject(args[0])) {
       args = [args[0].domain, args[0].range, args[0].options || args[0]];
     }
@@ -160,43 +192,70 @@ export function Chrt(_data = [], _node = create('div')) {
       case 'log10':
       case 'log2':
         return _scaleLog(
-          options.name || 'x',
-          'x',
+          options.name,
+          options.type,
           domain,
-          range || [0, this.width],
-          options.field || 'x',
+          range,
+          options.field,
+          transformation
+        );
+      case 'sqrt':
+        return _scaleSqrt(
+          options.name,
+          options.type,
+          domain,
+          range,
+          options.field,
           transformation
         );
       case 'time':
         // console.log('this.x','time', domain, options.name,options.field)
         return _scaleTime.apply(this, [
-          options.name || 'x',
-          'x',
+          options.name,
+          options.type,
           domain,
-          range || [0, this.width],
-          options.field || 'x'
+          range,
+          options.field
         ]);
       case 'ordinal':
         return _scaleOrdinal.apply(this, [
-          options.name || 'x',
-          'x',
+          options.name,
+          options.type,
           domain,
-          range || [0, this.width],
-          options.field || 'x'
+          range,
+          options.field
         ]);
       case 'linear':
       default:
         return _scaleLinear.apply(this, [
-          options.name || 'x',
-          'x',
+          options.name,
+          options.type,
           domain,
-          range || [0, this.width],
-          options.field || 'x'
+          range,
+          options.field
         ]);
     }
-  };
+  }
 
-  // this.y = (domain, range, options = {}) => {
+  this.x = (...args) => {
+    if (args.length === 1 && isObject(args[0])) {
+      args = [args[0].domain, args[0].range, args[0].options || args[0]];
+    }
+
+    const [domain, range, options = {}] = args || [];
+
+    return this.scale(
+      domain,
+      range || [0, this.width],
+      {
+        ...options,
+        name: options.name || 'x',
+        type: 'x',
+        field: options.field || 'x',
+      }
+    )
+  }
+
   this.y = (...args) => {
     if (args.length === 1 && isObject(args[0])) {
       args = [args[0].domain, args[0].range, args[0].options || args[0]];
@@ -204,48 +263,17 @@ export function Chrt(_data = [], _node = create('div')) {
 
     const [domain, range, options = {}] = args || [];
 
-    const transformation = options ? options.scale || 'linear' : 'linear';
-    switch (transformation) {
-      case 'log':
-      case 'log10':
-      case 'log2':
-        return _scaleLog(
-          options.name || 'y',
-          'y',
-          domain,
-          range || [this.height, 0],
-          options.field || 'y',
-          transformation
-        );
-      case 'time':
-        // console.log('this.x','time', domain, options.name,options.field)
-        return _scaleTime.apply(this, [
-          options.name || 'y',
-          'y',
-          domain,
-          range || [this.height, 0],
-          options.field || 'y'
-        ]);
-      case 'ordinal':
-        // console.log('this.y','ordinal', domain, options.name,options.field)
-        return _scaleOrdinal.apply(this, [
-          options.name || 'y',
-          'y',
-          domain,
-          range || [this.height, 0],
-          options.field || 'y'
-        ]);
-      case 'linear':
-      default:
-        return _scaleLinear.apply(this, [
-          options.name || 'y',
-          'y',
-          domain,
-          range || [this.height, 0],
-          options.field || 'y'
-        ]);
-    }
-  };
+    return this.scale(
+      domain,
+      range || [this.height, 0],
+      {
+        ...options,
+        name: options.name || 'y',
+        type: 'y',
+        field: options.field || 'y',
+      }
+    )
+  }
 
   this.update = () => {
     if (this.autoWidth || this.autoHeight) {
