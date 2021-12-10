@@ -43,7 +43,7 @@ export function Chrt(_data = [], _node = create('div')) {
   };
   this.scales = {
     x: {},
-    y: {}
+    y: {},
   };
   this.objects = [];
 
@@ -83,7 +83,7 @@ export function Chrt(_data = [], _node = create('div')) {
     padding,
   ) => {
     // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
-
+    this.scales[type] = this.scales[type] ?? {};
     const _scale = this.scales[type][name];
     const oldDomain = _scale ? [..._scale.domain] : [];
     const oldRange = _scale ? [..._scale.range] : [];
@@ -193,6 +193,7 @@ export function Chrt(_data = [], _node = create('div')) {
   }
 
   this.scale = (...args) => {
+    // console.log('THIS.SCALE', args)
     if (args.length === 1 && isObject(args[0])) {
       args = [args[0].domain, args[0].range, args[0].options || args[0]];
     }
@@ -213,6 +214,7 @@ export function Chrt(_data = [], _node = create('div')) {
           options.margins,
           options.padding,
         );
+      case 'pow':
       case 'sqrt':
         return _scaleSqrt(
           options.name,
@@ -339,6 +341,22 @@ export function Chrt(_data = [], _node = create('div')) {
         });
       });
     }
+
+    Object.values(this.scales.other || {}).forEach(scale => {
+      // console.log('scale other exists:', scale.getName(), scale.getType(), scale.transformation)
+      this.scale({
+        domain: scale.fixedDomain,
+        range: scale.range || [0, 10],
+        options: {
+          name: scale.getName(),
+          type: scale.getType(),
+          field: scale.field,
+          scale: scale.transformation,
+          margins: scale.margins || {top: 0, left: 0, right: 0, bottom: 0},
+          padding: scale.margins || {top: 0, left: 0, right: 0, bottom: 0},
+        }
+      });
+    });
 
     this.objects.forEach(obj => {
       obj.update();

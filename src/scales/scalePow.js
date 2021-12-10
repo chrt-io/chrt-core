@@ -4,8 +4,8 @@ import { memoize } from '../util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
 
-export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation, pow = 1, margins, padding) {
-  // console.log(`LINEAR scale(${name}, ${type}, ${domain}, ${range}, ${field})`)
+export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = pow, pow = 1, margins, padding) {
+  // console.log(`POW scale(${name}, ${type}, ${domain}, ${range}, ${field}, ${transformation}, ${pow}, ${margins}, ${padding})`)
 
   const _scale = this.scales[type][name];
   // console.log(`LINEAR: this.scales[${type}][${name}]=`,_scale);
@@ -175,14 +175,9 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
       range[0] +
       (type === 'x' ? _margins.left : _margins.bottom) * direction;
 
-
-    // const valueToDomain = (d - domainExtent[0]) / domainWidth;
-    //const valueToDomain = (log(d) - log(domainExtent[0])) / domainWidth;
-    // const valueToDomain = powFunction(d - domainExtent[0], pow) / powFunction(domainExtent[1], pow);
-    //(100 - 10) / 90
-    //const valueToDomain = (powFunction(d, pow) - powFunction(domainExtent[0], pow)) / powFunction(domainWidth, pow);
     const valueToDomain = (powFunction(d, pow) - powFunction(domainExtent[0],pow)) / (powFunction(domainExtent[1], pow) - powFunction(domainExtent[0], pow)); // - powFunction(domainExtent[0], pow)) / powFunction(domainWidth, pow);
-    //const valueToDomain = (powFunction(d, pow) - domainExtent[0]) / domainWidth
+    // console.log('_margins', _margins)
+    // console.log('POW',domainExtent, range,d,pow,'--->', valueToDomain, )
     return startCoord + rangeWidth * valueToDomain;
   };
 
@@ -215,6 +210,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   scalingFunction.getName = () => name;
   scalingFunction.getType = () => type;
   scalingFunction.transformation = 'pow';
+  scalingFunction.pow = pow;
   scalingFunction.getField = () => field;
   scalingFunction.isLog = () => false;
   scalingFunction.fixedDomain = fixedDomain;
