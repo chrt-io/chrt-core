@@ -4,7 +4,7 @@ import { isNull, arraysEqual } from '../helpers';
 //import Heckbert from './util/Heckbert';
 //import ExtendedWilkinson from './util/ExtendedWilkinson';
 
-export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field) {
+export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, margins, padding) {
   // console.log('scaleOrdinal', name, type, domain, range, field)
   const _scale = this.scales[type][name];
 
@@ -16,9 +16,10 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     //domain = [0, 1]; // not sure anymore about this
   }
   let _ticks = [];
+  const _padding = padding || this._padding;
   // // console.log('rrrrange', range)
-  range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
-  range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
+  range[0] += type === 'x' ? _padding.left : -_padding.bottom;
+  range[1] -= type === 'x' ? _padding.right : -_padding.top;
   // // console.log(name,'RANGE',range)
   // console.log('ORDINAL', _scale, _scale.getName(), _scale.transformation)
   const currentDomain =
@@ -75,17 +76,18 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   const domainWidth = domainExtent.length;
   const direction = range[1] >= range[0] ? 1 : -1;
+  const _margins = margins || this._margins;
   const rangeWidth =
     range[1] -
     range[0] -
     (type === 'x'
-      ? this._margins.left + this._margins.right
-      : this._margins.top + this._margins.bottom) *
+      ? _margins.left + _margins.right
+      : _margins.top + _margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
+    (type === 'x' ? _margins.left : _margins.bottom) * direction;
 
   const barwidth = rangeWidth / domainExtent.length;
 

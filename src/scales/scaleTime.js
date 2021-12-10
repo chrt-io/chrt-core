@@ -31,7 +31,9 @@ export default function scale(
   type,
   domain,
   range = [0, DEFAULT_WIDTH],
-  field
+  field,
+  margins,
+  padding
 ) {
   // console.log(`TIME scale(${name}, ${type}, [${domain ? domain.join(',') : 'null'}], ${range}, ${field})`)
   // console.log('domain in date:', domain ? domain.join(',') : 'null')
@@ -47,10 +49,10 @@ export default function scale(
     //domain = [0, 1]; // not sure anymore about this
   }
   let _ticks = [];
-
+  const _padding = padding || this._padding;
   // TODO: this should be removed and calculated somewhere else
-  range[0] += type === 'x' ? this._padding.left : -this._padding.bottom;
-  range[1] -= type === 'x' ? this._padding.right : -this._padding.top;
+  range[0] += type === 'x' ? _padding.left : -_padding.bottom;
+  range[1] -= type === 'x' ? _padding.right : -_padding.top;
   // // console.log(name,'RANGE',range)
 
   const currentDomain = _scale && !_scale.isLog() ? _scale.domain : [];
@@ -276,17 +278,18 @@ export default function scale(
   roundedDomainExtent = calculateTimeDomain();
 
   const direction = range[1] >= range[0] ? 1 : -1;
+  const _margins = margins || this._margins;
   const rangeWidth =
     range[1] -
     range[0] -
     (type === 'x'
-      ? this._margins.left + this._margins.right
-      : this._margins.top + this._margins.bottom) *
+      ? _margins.left + _margins.right
+      : _margins.top + _margins.bottom) *
       direction;
 
   const startCoord =
     range[0] +
-    (type === 'x' ? this._margins.left : this._margins.bottom) * direction;
+    (type === 'x' ? _margins.left : _margins.bottom) * direction;
 
   // console.log('roundedDomainExtent', roundedDomainExtent.map(d => new Date(d)))
 

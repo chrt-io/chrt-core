@@ -47,7 +47,7 @@ export function Chrt(_data = [], _node = create('div')) {
   };
   this.objects = [];
 
-  const _scaleLinear = (name, type, domain, range, field) => {
+  const _scaleLinear = (name, type, domain, range, field, margins, padding,) => {
     // console.log('----> _scaleLinear name:',name,'type:',type,domain,range,field)
     // console.log('this.scales', this.scales)
     const _scale = this.scales[type][name];
@@ -58,7 +58,9 @@ export function Chrt(_data = [], _node = create('div')) {
       type,
       domain, // || (this._data.length ? domain : null), // [0, 10] -> this messes up with the later assignement of data
       range,
-      field
+      field,
+      margins,
+      padding
     ]);
     if (
       !isNull(_scale) &&
@@ -76,7 +78,9 @@ export function Chrt(_data = [], _node = create('div')) {
     domain,
     range,
     field,
-    transformation = 'sqrt'
+    transformation = 'sqrt',
+    margins,
+    padding,
   ) => {
     // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
 
@@ -90,7 +94,9 @@ export function Chrt(_data = [], _node = create('div')) {
       range,
       field,
       transformation,
-      0.5
+      0.5,
+      margins,
+      padding,
     ]);
 
     if (
@@ -109,7 +115,9 @@ export function Chrt(_data = [], _node = create('div')) {
     domain,
     range,
     field,
-    transformation = 'log10'
+    transformation = 'log10',
+    margins,
+    padding,
   ) => {
     // console.log('scaleLog', name, type, domain, range, 'field:', field, transformation)
 
@@ -123,7 +131,9 @@ export function Chrt(_data = [], _node = create('div')) {
       domain,
       range,
       field,
-      transformation
+      transformation,
+      margins,
+      padding
     ]);
 
     if (
@@ -136,7 +146,7 @@ export function Chrt(_data = [], _node = create('div')) {
     return this;
   };
 
-  const _scaleOrdinal = (name, type, domain, range, field) => {
+  const _scaleOrdinal = (name, type, domain, range, field, margins, padding) => {
     // console.log('_scaleOrdinal', name, type, domain, range, 'field:', field)
     let _scale = this.scales[type][name];
     const oldDomain = _scale ? [..._scale.domain] : [];
@@ -146,7 +156,9 @@ export function Chrt(_data = [], _node = create('div')) {
       type,
       this._data.length ? domain : [],
       range,
-      field
+      field,
+      margins,
+      padding
     ]);
     if (
       !isNull(_scale) &&
@@ -158,12 +170,12 @@ export function Chrt(_data = [], _node = create('div')) {
     return this;
   };
 
-  const _scaleTime = (name, type, domain, range, field) => {
+  const _scaleTime = (name, type, domain, range, field, margins, padding) => {
     // console.log('scaleTime', name, type, domain, range, 'field:', field)
     const _scale = this.scales[type][name];
     const oldDomain = _scale ? [..._scale.domain] : [];
     const oldRange = _scale ? [..._scale.range] : [];
-    scaleTime.apply(this, [name, type, domain || [], range, field]);
+    scaleTime.apply(this, [name, type, domain || [], range, field, margins, padding]);
     // console.log('----->', this.scales)
     if (
       !isNull(_scale) &&
@@ -197,7 +209,9 @@ export function Chrt(_data = [], _node = create('div')) {
           domain,
           range,
           options.field,
-          transformation
+          transformation,
+          options.margins,
+          options.padding,
         );
       case 'sqrt':
         return _scaleSqrt(
@@ -206,7 +220,9 @@ export function Chrt(_data = [], _node = create('div')) {
           domain,
           range,
           options.field,
-          transformation
+          transformation,
+          options.margins,
+          options.padding,
         );
       case 'time':
         // console.log('this.x','time', domain, options.name,options.field)
@@ -215,7 +231,9 @@ export function Chrt(_data = [], _node = create('div')) {
           options.type,
           domain,
           range,
-          options.field
+          options.field,
+          options.margins,
+          options.padding,
         ]);
       case 'ordinal':
         return _scaleOrdinal.apply(this, [
@@ -223,7 +241,9 @@ export function Chrt(_data = [], _node = create('div')) {
           options.type,
           domain,
           range,
-          options.field
+          options.field,
+          options.margins,
+          options.padding,
         ]);
       case 'linear':
       default:
@@ -232,7 +252,9 @@ export function Chrt(_data = [], _node = create('div')) {
           options.type,
           domain,
           range,
-          options.field
+          options.field,
+          options.margins,
+          options.padding,
         ]);
     }
   }
