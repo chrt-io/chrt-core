@@ -52,6 +52,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     domainExtent[0] !== currentDomain[0] ||
     domainExtent[1] !== currentDomain[1]
   ) {
+
+    if(this._data.length && !this._data.some(d => !isNull(d[field]))) {
+      throw new Error(`Field ${field} not found in the data`)
+    }
+
     // if(isNull(fixedDomain)) {
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
     this._data.forEach((d) => {
@@ -81,7 +86,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     this.objects.forEach((obj) => {
       const _data = (!isNull(obj._data) && obj._data.length) ? obj._data : this._data;
       if (_data) {
-        // console.log('OBJ/CHART', obj)
+
+        if(_data.length && !_data.some(d => !isNull(d[field]))) {
+          throw new Error(`Field ${field} not found in the data`)
+        }
+
         _data.forEach((d) => {
           domainExtent[0] =
             isNull(domainExtent[0])

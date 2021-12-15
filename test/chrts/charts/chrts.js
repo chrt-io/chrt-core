@@ -20,3 +20,4 @@ export { default as nullValues } from './null-values.js';
 export { default as noData } from './no-data.js';
 export { default as oneDataPoint } from './one-data-point.js';
 export { default as scaleLogAndZero } from './zero-value-log.js';
+export { default as xLinearTwoYLinearScales } from './x-linear-two-y-linear-scales.js';

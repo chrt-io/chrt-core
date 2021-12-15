@@ -200,6 +200,10 @@ export function Chrt(_data = [], _node = create('div')) {
 
     const [domain, range, options = {}] = args || [];
     const transformation = options ? options.scale || 'linear' : 'linear';
+
+    options.name = options.name ?? options.field;
+    options.field = options.field ?? options.name;
+
     switch (transformation) {
       case 'log':
       case 'log10':
@@ -268,14 +272,17 @@ export function Chrt(_data = [], _node = create('div')) {
 
     const [domain, range, options = {}] = args || [];
 
+    const name = options.name ?? options.field;
+    const field = options.field ?? name;
+
     return this.scale(
       domain,
       range || [0, this.width],
       {
         ...options,
-        name: options.name || 'x',
+        name: name ?? 'x',
         type: 'x',
-        field: options.field || 'x',
+        field: field ?? 'x',
       }
     )
   }
@@ -287,14 +294,17 @@ export function Chrt(_data = [], _node = create('div')) {
 
     const [domain, range, options = {}] = args || [];
 
+    const name = options.name ?? options.field;
+    const field = options.field ?? name;
+
     return this.scale(
       domain,
       range || [this.height, 0],
       {
         ...options,
-        name: options.name || 'y',
+        name: name ?? 'y',
         type: 'y',
-        field: options.field || 'y',
+        field: field ?? 'y',
       }
     )
   }

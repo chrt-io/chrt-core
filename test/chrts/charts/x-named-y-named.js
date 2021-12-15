@@ -32,7 +32,7 @@ export default async function(container) {
   const chart=Chrt()
     .node(container)
     .size(600, 200)
-    .x({name:'X', scale:'linear'})
+    .x({name:'X', field: 'x', scale:'linear'})
     .y({name:'Z', field: 'z', scale:'linear'})
     .add(chrt.xAxis(10, 'X'))
     .add(chrt.yAxis(3,'Z'))
@@ -46,5 +46,6 @@ export default async function(container) {
         .x('X')
         .y('Z')
     )
+  // console.log('chart', chart)
   return chart;
 }
