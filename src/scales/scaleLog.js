@@ -38,6 +38,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   if (arguments.length === 1) {
     return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
   }
+  // console.log('domainExtent', domainExtent)
   if (
     isNull(fixedDomain) ||
     hasNaN(currentDomain) ||
@@ -96,11 +97,13 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('AFTER OBJECTS ->', domainExtent[0], domainExtent[1])
   }
 
-  const numScale = new logTicks(domainExtent);//, TICKS_DEFAULT, base);
+  // console.log('domainExtent', domainExtent)
+
+  const numScale = new logTicks(domainExtent, TICKS_DEFAULT, base);
 
   // re-assign domain based on max/min of logTicks nice scale
-  // domainExtent[0] = numScale.getMin();
-  // domainExtent[1] = numScale.getMax();
+  domainExtent[0] = numScale.getMin();
+  domainExtent[1] = numScale.getMax();
 
   if (isNull(fixedDomain)) {
     // console.log('--->eNumScale',eNumScale.getMin(), eNumScale.getMax())

@@ -16,7 +16,7 @@ const data = [
   },
   {
     x: 7,
-    y: 10000
+    y: 10000000
   }
 ];
 
@@ -24,10 +24,10 @@ export default async function(container) {
   return Chrt()
     .node(container)
     .size(600, 200)
-    .x({scale:'log'})
-    .y({scale:'log'})
-    .add(chrt.xAxis())
-    .add(chrt.yAxis())
+    .x({domain:[1,10000000], scale:'log'})
+    .y({domain:[1,10000000], scale:'log'})
+    .add(chrt.xAxis(3))
+    .add(chrt.yAxis(3))
     .add(
       chrt.chrtLine()
         .data(data, d => ({

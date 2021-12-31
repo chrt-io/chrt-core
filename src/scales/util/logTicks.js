@@ -45,15 +45,13 @@ export default function logTicks(
     //   return this._ticks;
     // }
     this.ticksNumber = n;
-
-    // // console.log('CALCULATING TICKS', dmin, dmax, this.ticksNumber)
     this._ticks = [];
 
     this.range = this.improveRange([dmin, dmax]);
-
+    // console.log(this.range, [dmin,dmax])
     // not working well, it keeps lowering and increasing bounds
-    this.lmin = Math.floor(log(dmin)) !== log(dmin) ? pow(Math.floor(log(dmin)) - 1) : dmin;
-    this.lmax = Math.floor(log(dmax)) !== log(dmax) ? pow(Math.floor(log(dmax)) + 1) : dmax;
+    this.lmin = Math.floor(log(this.range[0])) !== log(this.range[0]) ? pow(Math.floor(log(this.range[0])) - 1) : this.range[0];
+    this.lmax = Math.floor(log(this.range[1])) !== log(this.range[1]) ? pow(Math.floor(log(this.range[1])) + 1) : this.range[1];
 
     // this.lmin = this.range[0];
     // this.lmax = this.range[1];
@@ -62,10 +60,14 @@ export default function logTicks(
 
     const ticksRange = [log(this.lmin), log(this.lmax)];
 
-    // // console.log('ticksRange', ticksRange)
+    const ticksDiff = Math.abs(ticksRange[1] - ticksRange[0]);
+    const ticksStep = Math.max(1, Math.ceil(ticksDiff / n));
+
+    // console.log(n, 'ticksRange', ticksRange, ticksDiff, '->', ticksStep)
 
     if (ticksRange[0] > 0) {
       for (let i = ticksRange[0]; i <= ticksRange[1]; ++i) {
+        if(!(i % ticksStep)) {
           for (let k = 1; k < base; ++k) {
             const tick = pow(i) * k;
             // // console.log('k1',k,base,tick)
@@ -75,16 +77,19 @@ export default function logTicks(
             }
           }
         }
+      }
     } else for (let i = ticksRange[0]; i <= ticksRange[1]; ++i) {
+      if(!(i % ticksStep)) {
         for (let k = base - 1; k >= 1; --k) {
           const tick = pow(i) * k;
-          // // console.log('k2',k,base,tick, this.lmax)
+          // console.log('i',i,'k',k,base,'->',tick, this.lmax)
           // if (tick > this.lmax) break;
           if(tick >= this.lmin) {
             this._ticks.push(tick);
           }
         }
       }
+    }
     // // console.log('TICKS ARE', this._ticks)
     return this._ticks;
   };
