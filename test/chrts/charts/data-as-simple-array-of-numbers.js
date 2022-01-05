@@ -8,9 +8,9 @@ export default async function(container) {
     .node(container)
     .data(data)
     .size(600, 200)
-    .add(chrt.xAxis(8))
-    .add(chrt.yAxis())
-    .add(
+    .snap(chrt.xAxis(8))
+    .snap(chrt.yAxis())
+    .snap(
       chrt.chrtLine()
     );
   return chart

@@ -419,6 +419,7 @@ Chrt.prototype = chrt.prototype = {
   node,
   append,
   add,
+  snap: add,
   rollup,
   svg,
   border,
