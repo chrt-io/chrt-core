@@ -5,7 +5,7 @@ import { isNull, arraysEqual } from '../helpers';
 //import ExtendedWilkinson from './util/ExtendedWilkinson';
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, margins, padding) {
-  // console.log('scaleOrdinal', name, type, domain, range, field)
+  // console.log('scaleOrdinal', name,  type, domain, range, field)
   const _scale = this.scales[type][name];
 
   const fixedDomain =
@@ -49,9 +49,13 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // if(isNull(fixedDomain)) {
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, this._data)
     this._data.forEach((d) => {
-      if(domainExtent.indexOf(d[field || name]) === -1) {
-        domainExtent.push(d[field || name]);
-      }
+      [field, `${field}0`].forEach(f => {
+        const datum = d[f || name];
+        if(typeof datum !== 'undefined' && domainExtent.indexOf(datum) === -1) {
+          // console.log('pushing',f,datum)
+          domainExtent.push(datum);
+        }
+      });
     });
 
     // console.log('DOMAIN EXTENT', name, domainExtent.join(','))
@@ -63,10 +67,12 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
       if (_data) {
         _data.forEach((d) => {
           // console.log('test',type,name,'||',obj.fields[name],'->',d[field || obj.fields[name]],'in',domainExtent)
-          const datum = d[field || obj.fields[name]] ?? d;
-          if(domainExtent.indexOf(datum) === -1) {
-            domainExtent.push(datum);
-          }
+          [field, `${field}0`].forEach(f => {
+            const datum = d[f || obj.fields[name]];
+            if(typeof datum !== 'undefined' && domainExtent.indexOf(datum) === -1) {
+              domainExtent.push(datum);
+            }
+          });
         });
       }
     });

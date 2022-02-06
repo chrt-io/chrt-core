@@ -82,22 +82,24 @@ export default function scale(
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
     this._data.forEach((d) => {
       // // console.log(name, domainExtent[0],d[name],domainExtent[1])
-      domainExtent[0] =
-        isNull(domainExtent[0])
-          ? d[field || name]
-          : Math.min(
-              ...[!isNull(d) ? d[field || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
-                (value) => !isNull(value) && !isNaN(value)
-              )
-            );
-      domainExtent[1] =
-        isNull(domainExtent[1])
-          ? d[field || name]
-          : Math.max(
-              ...[!isNull(d) ? d[field || name] : null, domainExtent[1], !isNull(d) ? d[`stacked_${field || name}`] : null].filter(
-                (value) => !isNull(value) && !isNaN(value)
-              )
-            );
+      [field, `${field}0`].forEach(f => {
+        domainExtent[0] =
+          isNull(domainExtent[0])
+            ? d[f || name]
+            : Math.min(
+                ...[!isNull(d) ? d[f || name] : null, domainExtent[0], !isNull(d) ? d[`stacked_${f || name}`] : null].filter(
+                  (value) => !isNull(value) && !isNaN(value)
+                )
+              );
+        domainExtent[1] =
+          isNull(domainExtent[1])
+            ? d[f || name]
+            : Math.max(
+                ...[!isNull(d) ? d[f || name] : null, domainExtent[1], !isNull(d) ? d[`stacked_${f || name}`] : null].filter(
+                  (value) => !isNull(value) && !isNaN(value)
+                )
+              );
+      });
     });
 
     // console.log('AFTER DATA DOMAIN EXTENT', name, domainExtent)
@@ -109,24 +111,26 @@ export default function scale(
       if (_data) {
         // console.log('OBJ/CHART', obj, _data)
         _data.forEach((d) => {
-          domainExtent[0] = isNull(domainExtent[0])
-            ? +d[field || obj.fields[name]]
-            : Math.min(
-                ...[
-                  !isNull(d) ? +d[field || obj.fields[name]] : null,
-                  domainExtent[0],
-                  !isNull(d) ? +d[`stacked_${field || obj.fields[name]}`] : null,
-                ].filter((value) => !isNull(value) && !hasNaN(value))
-              );
-          domainExtent[1] = isNull(domainExtent[1])
-            ? +d[field || obj.fields[name]]
-            : Math.max(
-                ...[
-                  !isNull(d) ? +d[field || obj.fields[name]] : null,
-                  domainExtent[1],
-                  !isNull(d) ? +d[`stacked_${field || obj.fields[name]}`] : null,
-                ].filter((value) => !isNull(value) && !hasNaN(value))
-              );
+          [field, `${field}0`].forEach(f => {
+            domainExtent[0] = isNull(domainExtent[0])
+              ? +d[f || obj.fields[name]]
+              : Math.min(
+                  ...[
+                    !isNull(d) ? +d[f || obj.fields[name]] : null,
+                    domainExtent[0],
+                    !isNull(d) ? +d[`stacked_${f || obj.fields[name]}`] : null,
+                  ].filter((value) => !isNull(value) && !hasNaN(value))
+                );
+            domainExtent[1] = isNull(domainExtent[1])
+              ? +d[f || obj.fields[name]]
+              : Math.max(
+                  ...[
+                    !isNull(d) ? +d[f || obj.fields[name]] : null,
+                    domainExtent[1],
+                    !isNull(d) ? +d[`stacked_${f || obj.fields[name]}`] : null,
+                  ].filter((value) => !isNull(value) && !hasNaN(value))
+                );
+          });
         });
       }
     });
