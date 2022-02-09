@@ -193,7 +193,6 @@ export function Chrt(_data = [], _node = create('div')) {
   }
 
   this.scale = (...args) => {
-    // console.log('THIS.SCALE', args)
     if (args.length === 1 && isObject(args[0])) {
       args = [args[0].domain, args[0].range, args[0].options || args[0]];
     }
@@ -325,6 +324,7 @@ export function Chrt(_data = [], _node = create('div')) {
         // console.log('scale x exists:', scale.getName(), scale.getType(), scale.transformation)
         this.x({
           domain: scale.fixedDomain,
+          // range: scale.range || [0, this.width], // this would allow custom ranges
           range: [0, this.width],
           options: {
             name: scale.getName(),
@@ -341,6 +341,7 @@ export function Chrt(_data = [], _node = create('div')) {
       Object.values(this.scales.y).forEach(scale => {
         this.y({
           domain: scale.fixedDomain,
+          // range: scale.range || [this.height, 0], // this would allow custom ranges
           range: [this.height, 0],
           options: {
             name: scale.getName(),

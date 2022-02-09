@@ -12,18 +12,21 @@ const data = [
   },
   {
     x: 3,
-    y: 700
+    y: 14
   },
   {
     x: 7,
-    y: 10000
+    y: 22
   }
 ];
 
 export default async function(container) {
-  const chart = Chrt()
+  return Chrt()
     .node(container)
     .size(600, 200)
+    .x({scale:'linear', domain:[10,0]})
+    .y({scale:'linear'})
+    // .y({domain:[1,10000], scale:'log'})
     .add(chrt.xAxis())
     .add(chrt.yAxis())
     .add(
@@ -33,6 +36,4 @@ export default async function(container) {
           y: d.y,
         }))
     );
-  console.log(chart)
-  return  chart;
 }

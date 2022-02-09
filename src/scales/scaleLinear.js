@@ -15,7 +15,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   const copyOfFixedDomain = !isNull(fixedDomain) ? [...fixedDomain] : null;
   // console.log('CURRENT FIXED DOMAIN IS', fixedDomain)
   if (!domain) {
-    //domain = [0, 1]; // not sure anymore about this
+    // domain = [0, 1]; // not sure anymore about this
   }
   let _ticks = [];
   const _padding = padding || this._padding;
@@ -24,11 +24,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   range[1] -= type === 'x' ? _padding.right : -_padding.top;
   // console.log(name,'RANGE',range)
 
-  const currentDomain =
-    _scale && !_scale.isLog()
-      ? _scale.domain
-      : [];
-  let domainExtent = copyOfFixedDomain || domain || currentDomain;
+  // const currentDomain =
+  //   _scale && !_scale.isLog()
+  //     ? _scale.domain
+  //     : [];
+  let domainExtent = copyOfFixedDomain || domain || []; // currentDomain;
 
   // console.log('DOMAIN', name, [...domainExtent], this.scales[name])
   // console.log('FIXED DOMAIN', name, fixedDomain)
@@ -46,11 +46,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   if (
     isNull(fixedDomain) ||
     hasNull(fixedDomain) ||
-    hasNaN(currentDomain) ||
+    // hasNaN(currentDomain) ||
     !domainExtent ||
-    !domainExtent.length ||
-    domainExtent[0] !== currentDomain[0] ||
-    domainExtent[1] !== currentDomain[1]
+    !domainExtent.length // ||
+    // domainExtent[0] !== currentDomain[0] ||
+    // domainExtent[1] !== currentDomain[1]
   ) {
     // if(isNull(fixedDomain)) {
     // console.log('CALCULATE DOMAIN BASED ON THE DATA', name, field, this._data)
@@ -133,11 +133,18 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     }
   }
 
+  domainExtent = [
+    isNull(domainExtent[0]) || isNaN(domainExtent[0]) ? 0 : domainExtent[0],
+    isNull(domainExtent[1]) || isNaN(domainExtent[1]) ? 1 : domainExtent[1],
+  ]
+
   // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
 
   // const numScale = new Heckbert(domainExtent);
+  //domainExtent = domainExtent.map((d,i) => isNaN(d) ? i : d)
   const eNumScale = new ExtendedWilkinson(domainExtent);
-  // // console.log('E WILK', eNumScale.ticks())
+  // console.log('E WILK', eNumScale.ticks())
+  // console.log(eNumScale.getMin(),eNumScale.getMax())
   // re-assign domain based on, max/min of heckbert nice scale
   // console.log(domainExtent[0],domainExtent[1],'after WILKINSON', eNumScale.getMin(), eNumScale.getMax())
 
@@ -149,11 +156,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   // console.log('fixedDomain', fixedDomain);
   if (isNull(fixedDomain)) {
     // console.log('--->eNumScale',eNumScale.getMin(), eNumScale.getMax())
-    domainExtent[0] = !isNull(currentDomain[0])
-      ? Math.min(currentDomain[0], eNumScale.getMin())
+    domainExtent[0] = !isNull(domainExtent[0])
+      ? Math.min(domainExtent[0], eNumScale.getMin())
       : eNumScale.getMin();
-    domainExtent[1] = !isNull(currentDomain[1])
-      ? Math.max(currentDomain[1], eNumScale.getMax())
+    domainExtent[1] = !isNull(domainExtent[1])
+      ? Math.max(domainExtent[1], eNumScale.getMax())
       : eNumScale.getMax();
   }
 
@@ -184,6 +191,12 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     return startCoord + rangeWidth * valueToDomain;
   };
 
+  const precisionRound = (number, precision = 12) => {
+    const factor = Math.pow(10, precision);
+    const n = precision < 0 ? number : 0.01 / factor + number;
+    return Math.round( n * factor) / factor;
+  }
+
   const ticks = (n = TICKS_DEFAULT) => {
     // TODO: n can never be null...this needs to be reviews, it doesn't work well, _ticks?!?
     // if (isNull(n) && _ticks.length > 0) {
@@ -201,7 +214,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('#### TICKS', _ticks);
     return _ticks.map((value, index) => ({
       index,
-      value,
+      value: precisionRound(value, 12),
       x: scalingFunction(value),
       isMinor: fixedTicks ? 0 : index % 2,
       isZero: value === 0,
@@ -209,7 +222,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
     // return _ticks;
   };
-
+  // console.log('DOMAIN', domain, fixedDomain)
   scalingFunction.getName = () => name;
   scalingFunction.getType = () => type;
   scalingFunction.transformation = 'linear';

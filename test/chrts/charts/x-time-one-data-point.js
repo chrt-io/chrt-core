@@ -1,17 +1,20 @@
 import * as chrt from 'chrt';
 import Chrt from '../../../src/Chrt';
 
-const data = [0,3,5,3,7,9,2,5];
-
 export default async function(container) {
   const chart = Chrt()
     .node(container)
+    .x({scale:'time'})
+    .data([{x:new Date(2022,1,7), y: 20}])
     .size(600, 200)
-    .add(chrt.xAxis(5))
-    .add(chrt.yAxis())
     .add(
-      chrt.chrtLine()
-    );
+      chrt.xAxis(3)
+        .format(d => new Intl.DateTimeFormat('en-US').format(d))
+    )
+    .add(chrt.yAxis(3))
+    .add(
+      chrt.chrtPoints()
+    )
 
   // console.log(chart)
 
