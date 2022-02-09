@@ -1,8 +1,10 @@
 import { DEFAULT_WIDTH, TICKS_DEFAULT } from '../constants';
 import { isNull, hasNaN, hasNull } from '../helpers';
-import { memoize } from '../util';
+import { memoize, precisionRound } from '../util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
+
+const DEFAULT_DOMAIN = [0, 1];
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = pow, pow = 1, margins, padding) {
   // console.log(`POW scale(${name}, ${type}, ${domain}, ${range}, ${field}, ${transformation}, ${pow}, ${margins}, ${padding})`)
@@ -140,7 +142,10 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     }
   }
 
-  // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
+  domainExtent = [
+    isNull(domainExtent[0]) || isNaN(domainExtent[0]) ? DEFAULT_DOMAIN[0] : domainExtent[0],
+    isNull(domainExtent[1]) || isNaN(domainExtent[1]) ? DEFAULT_DOMAIN[1] : domainExtent[1],
+  ]
 
   // const numScale = new Heckbert(domainExtent);
   const eNumScale = new ExtendedWilkinson(domainExtent);
@@ -211,7 +216,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('#### TICKS', _ticks);
     return _ticks.map((value, index) => ({
       index,
-      value,
+      value: precisionRound(value),
       x: scalingFunction(value),
       isMinor: fixedTicks ? 0 : index % 2,
       isZero: value === 0,

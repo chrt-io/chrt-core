@@ -1,8 +1,10 @@
 import { DEFAULT_WIDTH, TICKS_DEFAULT } from '../constants';
 import { isNull, hasNaN, hasNull } from '../helpers';
-import { memoize } from '../util';
+import { memoize, precisionRound } from '../util';
 //import Heckbert from './util/Heckbert';
 import ExtendedWilkinson from './util/ExtendedWilkinson';
+
+const DEFAULT_DOMAIN = [0, 1];
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, margins, padding) {
   // console.log(`LINEAR scale(${name}, ${type}, ${domain}, ${range}, ${field})`)
@@ -134,8 +136,8 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   }
 
   domainExtent = [
-    isNull(domainExtent[0]) || isNaN(domainExtent[0]) ? 0 : domainExtent[0],
-    isNull(domainExtent[1]) || isNaN(domainExtent[1]) ? 1 : domainExtent[1],
+    isNull(domainExtent[0]) || isNaN(domainExtent[0]) ? DEFAULT_DOMAIN[0] : domainExtent[0],
+    isNull(domainExtent[1]) || isNaN(domainExtent[1]) ? DEFAULT_DOMAIN[1] : domainExtent[1],
   ]
 
   // console.log('DOMAIN AFTER IMPROVEMENT', name, [...domainExtent])
@@ -191,12 +193,6 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     return startCoord + rangeWidth * valueToDomain;
   };
 
-  const precisionRound = (number, precision = 12) => {
-    const factor = Math.pow(10, precision);
-    const n = precision < 0 ? number : 0.01 / factor + number;
-    return Math.round( n * factor) / factor;
-  }
-
   const ticks = (n = TICKS_DEFAULT) => {
     // TODO: n can never be null...this needs to be reviews, it doesn't work well, _ticks?!?
     // if (isNull(n) && _ticks.length > 0) {
@@ -214,7 +210,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('#### TICKS', _ticks);
     return _ticks.map((value, index) => ({
       index,
-      value: precisionRound(value, 12),
+      value: precisionRound(value),
       x: scalingFunction(value),
       isMinor: fixedTicks ? 0 : index % 2,
       isZero: value === 0,

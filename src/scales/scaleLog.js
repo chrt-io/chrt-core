@@ -1,8 +1,10 @@
 import { DEFAULT_WIDTH, TICKS_DEFAULT } from '../constants';
 import logTicks from './util/logTicks';
 import { baseLog } from '../helpers/math';
-import { memoize } from '../util';
+import { memoize, precisionRound } from '../util';
 import { isNull, hasNaN, isInfinity } from '../helpers';
+
+const DEFAULT_DOMAIN = [1, 10];
 
 export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], field, transformation = 'log10', margins, padding) {
   // console.log('LOG SCALE', name, type, domain, range, 'field:', field, transformation);
@@ -29,11 +31,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   range[1] -= type === 'x' ? _padding.right : -_padding.top;
   // // console.log(name,'RANGE',range)
 
-  const currentDomain =
-    _scale && _scale.isLog()
-      ? _scale.domain
-      : [];
-  let domainExtent = copyOfFixedDomain || domain || currentDomain;
+  // const currentDomain =
+  //   _scale && _scale.isLog()
+  //     ? _scale.domain
+  //     : [];
+  let domainExtent = copyOfFixedDomain || domain || []; // currentDomain;
   // console.log('using domainExtent', domainExtent[0], domainExtent[1]);
   if (arguments.length === 1) {
     return this.scales.x[arguments[0]] || this.scales.y[arguments[0]];
@@ -41,11 +43,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   // console.log('domainExtent', domainExtent)
   if (
     isNull(fixedDomain) ||
-    hasNaN(currentDomain) ||
+    // hasNaN(currentDomain) ||
     !domainExtent ||
-    !domainExtent.length ||
-    domainExtent[0] !== currentDomain[0] ||
-    domainExtent[1] !== currentDomain[1]
+    !domainExtent.length // ||
+    // domainExtent[0] !== currentDomain[0] ||
+    // domainExtent[1] !== currentDomain[1]
   ) {
     this._data
       .filter((d) => d[field] > 0)
@@ -100,7 +102,12 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     // console.log('AFTER OBJECTS ->', domainExtent[0], domainExtent[1])
   }
 
-  // console.log('domainExtent', domainExtent)
+  //console.log('domainExtent', ...domainExtent)
+
+  domainExtent = [
+    isNull(domainExtent[0]) || isNaN(domainExtent[0]) ? DEFAULT_DOMAIN[0] : domainExtent[0],
+    isNull(domainExtent[1]) || isNaN(domainExtent[1]) ? DEFAULT_DOMAIN[1] : domainExtent[1],
+  ]
 
   const numScale = new logTicks(domainExtent, TICKS_DEFAULT, base);
 
@@ -110,11 +117,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
 
   if (isNull(fixedDomain)) {
     // console.log('--->eNumScale',eNumScale.getMin(), eNumScale.getMax())
-    domainExtent[0] = !isNull(currentDomain[0])
-      ? Math.min(currentDomain[0], numScale.getMin())
+    domainExtent[0] = !isNull(domainExtent[0])
+      ? Math.min(domainExtent[0], numScale.getMin())
       : numScale.getMin();
-    domainExtent[1] = !isNull(currentDomain[1])
-      ? Math.max(currentDomain[1], numScale.getMax())
+    domainExtent[1] = !isNull(domainExtent[1])
+      ? Math.max(domainExtent[1], numScale.getMax())
       : numScale.getMax();
   }
   // console.log('NEW domain extent', domainExtent[0], domainExtent[1])
@@ -151,7 +158,7 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
   const ticks = (n = TICKS_DEFAULT) => {
     _ticks = numScale.ticks(n).map((value, index) => ({
       index,
-      value,
+      value: precisionRound(value),
       x: scalingFunction(value),
       isMinor: log(value) % 1 // === 0,
     }));

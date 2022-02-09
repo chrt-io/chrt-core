@@ -19,6 +19,8 @@ export { default as autoSize } from './auto-size.js';
 export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
 export { default as nullValues } from './null-values.js';
 export { default as noData } from './no-data.js';
+export { default as noDataLog } from './no-data-log.js';
+export { default as noDataSqrt } from './no-data-sqrt.js';
 export { default as oneDataPoint } from './one-data-point.js';
 export { default as scaleLogAndZero } from './zero-value-log.js';
 export { default as xLinearTwoYLinearScales } from './x-linear-two-y-linear-scales.js';
