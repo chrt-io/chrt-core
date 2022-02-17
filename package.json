@@ -61,7 +61,7 @@
     "babel-plugin-root-import": "^6.6.0",
     "babelify": "^10.0.0",
     "budo": "^11.6.4",
-    "chrt": "0.0.145",
+    "chrt": "0.0.146",
     "eslint": "^8.9.0",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
