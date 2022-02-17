@@ -119,18 +119,14 @@ test('Test margins + padding in SVG with chrtPoints', async () => {
 
   const node = chart.node();
 
-  const circle0 = node.querySelector('circle[data-id="circle--0"]');
-  const circle1 = node.querySelector('circle[data-id="circle--1"]');
+  const circle0 = node.querySelector('circle[data-id="point--0"]');
+  const circle1 = node.querySelector('circle[data-id="point--1"]');
 
   expect({
-    cx0: +circle0.getAttribute('cx'),
-    cy0: +circle0.getAttribute('cy'),
-    cx1: +circle1.getAttribute('cx'),
-    cy1: +circle1.getAttribute('cy')
+    c0: circle0.getAttribute('transform'),
+    c1: circle1.getAttribute('transform'),
   }).toStrictEqual({
-    cx0: MARGINS.left + PADDING.left,
-    cy0: HEIGHT - (MARGINS.bottom + PADDING.bottom),
-    cx1: WIDTH - (MARGINS.right + PADDING.right),
-    cy1: MARGINS.top + PADDING.top,
+    c0: `translate(${MARGINS.left + PADDING.left}, ${HEIGHT - (MARGINS.bottom + PADDING.bottom)}) rotate(0)`,
+    c1: `translate(${WIDTH - (MARGINS.right + PADDING.right)}, ${MARGINS.top + PADDING.top}) rotate(0)`,
   });
 });

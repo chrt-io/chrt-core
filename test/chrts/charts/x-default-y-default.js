@@ -33,6 +33,6 @@ export default async function(container) {
           y: d.y,
         }))
     );
-  console.log(chart)
+  // console.log(chart)
   return  chart;
 }

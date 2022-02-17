@@ -248,7 +248,7 @@ export default function scale(
       step = UNITS[interval] || LONGER_UNITS[interval] || UNITS.day;
       //domainExtent[0] = new Date(domainExtent)
       // console.log('original dates', domainExtent.map(d => new Date(d)))
-      if (step > LONGER_UNITS.week) {
+      if (step >= UNITS.day) {
         const d0 = new Date(_domainExtent[0]);
         const d1 = new Date(_domainExtent[1]);
         switch (interval) {
@@ -262,17 +262,24 @@ export default function scale(
             _domainExtent[0] = new Date(d0.getFullYear(), 0, 1);
             _domainExtent[1] = new Date(d1.getFullYear(), 0, 1);
             break;
+          case 'day':
+          default:
+            _domainExtent[0] = new Date(d0.getFullYear(), +d0.getMonth(), d0.getDate());
+            _domainExtent[1] = new Date(d1.getFullYear(), +d1.getMonth(), d1.getDate());
+            // break;
         }
 
         return _domainExtent;
       }
       // console.log('new dates', domainExtent.map(d => new Date(d)))
-      // console.log('DEFINE DOMAIN EXTENTS WITH', interval, step)
+      console.log('DEFINE DOMAIN EXTENTS WITH', interval, step, _domainExtent)
 
       // console.log('_domainExtent', _domainExtent, _domainExtent.map(d => new Date(d)))
       return [
         Math.floor(_domainExtent[0] / step) * step,
         Math.ceil(_domainExtent[1] / step) * step,
+        // _domainExtent[0],
+        // _domainExtent[1],
       ];
     }
     return [];
@@ -280,7 +287,8 @@ export default function scale(
   // console.log('domainExtent', domainExtent.map(d => new Date(d)))
   let roundedDomainExtent = domainExtent;
   roundedDomainExtent = calculateTimeDomain();
-
+  // console.log('ORIGINAL DOMAIN', domainExtent)
+  // console.log('ROUNDED DOMAIN', roundedDomainExtent)
   const direction = range[1] >= range[0] ? 1 : -1;
   const _margins = margins || this._margins;
   const rangeWidth =

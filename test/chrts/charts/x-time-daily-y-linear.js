@@ -15,15 +15,25 @@ export default async function(container) {
     .x({scale:'time'})
     .add(chrt.xAxis()
       .interval('day')
-      .format(d => new Intl.DateTimeFormat('en-US', {day: 'numeric'}).format(d))
+      .format(d => {
+        // console.log('day', d)
+        return new Intl.DateTimeFormat('en-US', {day: 'numeric'}).format(d)
+      })
     )
     .add(chrt.yAxis())
     .add(
       chrt.chrtPoints()
-        .data(data, d => ({
-          x: d.x,
-          y: d.y,
-        }))
-        .radius(1)
+        // .data(data, d => ({
+        //   x: d.x,
+        //   y: d.y,
+        // }))
+        .data([0,1,2,3,4,5,6,7,8].map(d => ({
+          x: new Date(2022,0,d,0),
+          y: d,
+        })))
+        .radius(d => {
+          // console.log('r ---->', d)
+          return 2;
+        })
     );
 }
