@@ -233,6 +233,11 @@ export default function scale(name, type, domain, range = [0, DEFAULT_WIDTH], fi
     Math.abs(scalingFunction(domainExtent[0] + scalingFunction.step) -
     scalingFunction(domainExtent[0]));
   scalingFunction.ticks = memoize(ticks);
+  scalingFunction.clear = () => {
+    console.log('CLEARING SCALE', this)
+    this.fixedDomain = null;
+    this.domain = null;
+  }
   this.scales[type][name] = scalingFunction;
   return this;
 }
