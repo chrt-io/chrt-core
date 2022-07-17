@@ -7,7 +7,10 @@ export default function svg(update = true) {
     svgNode.setAttribute('preserveAspectRatio', 'none');
     // svgNode.setAttribute('width', '100%');
     // svgNode.setAttribute('height', '100%');
-    svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+
+    // not needed for inling svg, should be added on export
+    // svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+
     // svgNode.style.overflow = 'visible';
     this.currentNode.appendChild(svgNode);
     // this.svg = svgNode;
