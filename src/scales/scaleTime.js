@@ -272,7 +272,7 @@ export default function scale(
         return _domainExtent;
       }
       // console.log('new dates', domainExtent.map(d => new Date(d)))
-      console.log('DEFINE DOMAIN EXTENTS WITH', interval, step, _domainExtent)
+      // console.log('DEFINE DOMAIN EXTENTS WITH', interval, step, _domainExtent)
 
       // console.log('_domainExtent', _domainExtent, _domainExtent.map(d => new Date(d)))
       return [
