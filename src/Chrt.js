@@ -198,7 +198,7 @@ export function Chrt(_data = [], _node = create('div')) {
     }
 
     const [domain, range, options = {}] = args || [];
-    const transformation = options ? options.scale || 'linear' : 'linear';
+    const transformation = options?.scale ?? 'linear';
 
     options.name = options.name ?? options.field;
     options.field = options.field ?? options.name;
