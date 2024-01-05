@@ -11,21 +11,15 @@
     "umd": "./dist/chrt-core.min.js",
     "default": "./dist/chrt-core.esm.js"
   },
-  "keywords": [
-    "chrt",
-    "charts",
-    "visualization"
-  ],
+  "keywords": ["chrt", "charts", "visualization"],
   "watch": {
     "build": {
-      "patterns": [
-        "src"
-      ],
+      "patterns": ["src"],
       "extensions": "js,jsx"
     }
   },
   "engines": {
-    "node": "^16 || ^18"
+    "node": "^16 || ^18 || ^20 || ^21"
   },
   "scripts": {
     "test": "TZ=UTC jest",
@@ -77,8 +71,5 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "watch": "^1.0.2"
   },
-  "files": [
-    "dist/**/*.js",
-    "src/**/*.js"
-  ]
+  "files": ["dist/**/*.js", "src/**/*.js"]
 }
