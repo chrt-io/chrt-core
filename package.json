@@ -24,6 +24,9 @@
       "extensions": "js,jsx"
     }
   },
+  "engines": {
+    "node": "^16 || ^18"
+  },
   "scripts": {
     "test": "TZ=UTC jest",
     "test:scales": "jest -i test/scales",
