@@ -19,6 +19,12 @@ export default function (data, accessor) {
     return this;
   }
 
+  // Object.values(this.scales).forEach(scale => {
+  //   Object.values(scale).forEach(d => {
+  //     d.clear();
+  //   });
+  // })
+
   // data is passed
   this._orginalData = data;
 

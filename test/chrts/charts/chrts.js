@@ -25,3 +25,5 @@ export { default as oneDataPoint } from './one-data-point.js';
 export { default as scaleLogAndZero } from './zero-value-log.js';
 export { default as xLinearTwoYLinearScales } from './x-linear-two-y-linear-scales.js';
 export { default as invertedDomainXLinearYLinear } from './x-linear-y-linear-inverted-domain.js';
+export { default as updateDataChrt } from './update-data-chrt.js';
+export { default as updateDataChrtStack } from './update-data-chrt-stack.js';

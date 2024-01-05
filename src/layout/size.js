@@ -1,11 +1,11 @@
-import {DEFAULT_WIDTH, DEFAULT_HEIGHT} from '../constants';
+import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../constants';
 
 export default function size(...dimensions) {
-  if(!dimensions.length) {
+  if (!dimensions.length) {
     return {
       width: this.width,
-      height: this.height
-    }
+      height: this.height,
+    };
   }
   // console.log('size', dimensions)
   const [width, height, update = true] = dimensions;
@@ -14,33 +14,36 @@ export default function size(...dimensions) {
   const oldHeight = this.height;
 
   this.width = (width !== 'auto' ? width : null) || oldWidth || DEFAULT_WIDTH;
-  this.height = (height !== 'auto' ? height : null) || oldHeight || DEFAULT_HEIGHT;
+  this.height =
+    (height !== 'auto' ? height : null) || oldHeight || DEFAULT_HEIGHT;
 
   this.autoWidth = null;
-  if(width === 'auto') {
+  if (width === 'auto') {
     this.autoWidth = 'auto';
     this.width = this.root.parentElement?.clientWidth ?? this.width;
   }
   this.autoHeight = null;
-  if(height === 'auto') {
+  if (height === 'auto') {
     this.autoHeight = 'auto';
     this.height = this.root.parentElement?.clientHeight ?? this.height;
   }
 
   let svg = this.root.querySelector('svg');
-  if(!svg) {
+  if (!svg) {
     this.svg(false);
   }
 
   svg = this.root.querySelector('svg');
-  svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
+  svg.setAttribute('width', this.width);
+  svg.setAttribute('height', this.height);
+  svg.setAttribute('font-family', 'system-ui');
+  svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`);
+  svg.style.maxWidth = '100%';
   svg.parentNode.style.width = `${this.width}px`;
   svg.parentNode.style.height = `${this.height}px`;
 
-
-
   // if(!oldWidth || !oldHeight || oldWidth !== width || oldHeight !== height) {
-  if(update) {
+  if (update) {
     return this.update();
   }
   //return this;
