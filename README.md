@@ -1,75 +1,197 @@
 # chrt-core
-Opinionated charts
 
-**WORK IN PROGRESS** Please come back in few months after we will announce the first beta version. For more info mail to sayhi@chrt.io
+The core module of the chrt framework. It provides the foundation for creating charts, managing data, and coordinating different visualization components. This module is required for all chrt visualizations.
 
-## How to build
+### Observable Examples and Documentation:
 
-###  Install the dependencies
-```
-npm install
-```
+- [Introducing Chrt - Observable](https://observablehq.com/@chrt/introducing-chrt?collection=@chrt/chrt)
 
-###  Build the package
-```
-npm build
-```
-### Developing
-If you want to develop and see the changes reloaded live into another app you can use the watch script
-```
-npm run watch
+## Installing
+
+```bash
+npm install chrt-core
 ```
 
-## Use it as a module
+## Basic Usage
 
-### Method 1 - tgz package
+```js
+import Chrt from "chrt-core";
 
-#### Use the tgz provided in the repository
-You can use the `chrt-VERSION.tgz` package. The following commands will expand the chrt module in the `node_modules` folder of your project. Ready to be used with the usual `import` command:
-```
-cp chrt-VERSION.tgz SOMEWHERE
-cd myproject
-npm install SOMEWHERE/chrt-VERSION.tgz
-```
-
-#### Create a tgz npm package
-You can create a package for testing with
-```
-npm pack
-```
-This command will create a file called `chrt-VERSION.tgz` in the root folder of chrt.
-
-### Method 2 - symlinked package
-
-####  Create a global node module
-```
-npm link
-```
-This creates `chrt` module inside your global `node_modules` so that you can import it with `import Chrt from 'chrt'`
-
-####  Use the module in a different app
-```
-npm link chrt
-```
-This will create a sym link to the module created in your global.
-
-## Use it in your code
-After having installed or sym-linked the node you can use it as usual
-```
-import Chrt, {chrtPoints, chrtLine} from 'chrt';
+// Create a basic chart
+const chart = Chrt()
+  .node(document.querySelector("#chart")) // set container
+  .size(600, 400) // set dimensions
+  .data([1, 2, 3, 4, 5]) // add data
+  .add(chrt.line()); // add components
 ```
 
+## API Reference
 
+### Chart Creation and Container
 
-## Testing
+#### `Chrt([data[, container]])`
 
-### Unit test with Jest
-Run `npm run test` to run all the tests on the code with Jest.
+Creates a new chart instance.
+
+```js
+// Empty chart
+const chart = Chrt();
+
+// Chart with data
+const chart = Chrt([1, 2, 3, 4, 5]);
+
+// Chart with data and container
+const chart = Chrt([1, 2, 3, 4, 5], document.querySelector("#chart"));
 ```
-npm run test
+
+#### `.node([element])`
+
+Sets or gets the DOM container for the chart.
+
+```js
+// Set container
+chart.node(document.querySelector("#chart"));
+
+// Get current container
+const container = chart.node();
 ```
 
-To run only one test:
+### Dimensions and Layout
+
+#### `.size([width[, height]])`
+
+Sets the dimensions of the chart.
+
+```js
+// Fixed size
+chart.size(600, 400);
+
+// Auto size (fits container)
+chart.size("auto", "auto");
 ```
-npx jest test/scales/scaleLinear.test.js
+
+#### `.margins([values])`
+
+Sets the margins around the chart area.
+
+```js
+chart.margins({
+  top: 20,
+  right: 20,
+  bottom: 30,
+  left: 40,
+});
+```
+
+#### `.padding([values])`
+
+Sets the padding within the chart area.
+
+```js
+chart.padding({
+  top: 10,
+  right: 10,
+  bottom: 10,
+  left: 10,
+});
+```
+
+### Data Management
+
+#### `.data([data[, accessor]])`
+
+Sets or gets the chart's data.
+
+```js
+// Set simple array
+chart.data([1, 2, 3, 4, 5]);
+
+// Set object array with accessor
+chart.data(data, (d) => ({
+  x: d.date,
+  y: d.value,
+}));
+```
+
+### Scales
+
+#### `.x([options])` / `.y([options])`
+
+Configures the x and y scales.
+
+```js
+// Linear scale (default)
+chart.x({ scale: "linear" });
+
+// Log scale
+chart.y({ scale: "log" });
+
+// Time scale
+chart.x({
+  scale: "time",
+  domain: [new Date(2020, 0, 1), new Date(2021, 0, 1)],
+});
+
+// Ordinal scale
+chart.x({
+  scale: "ordinal",
+  domain: ["A", "B", "C"],
+});
+```
+
+### Components
+
+#### `.add(component)` / `.snap(component)`
+
+Adds a visualization component to the chart. Both methods are aliases.
+
+```js
+// Add multiple components
+chart.add(chrt.xAxis()).add(chrt.yAxis()).add(chrt.line());
+```
+
+### Examples
+
+#### Basic Line Chart
+
+```js
+Chrt()
+  .node(container)
+  .size(600, 400)
+  .data([
+    { date: "2021-01", value: 10 },
+    { date: "2021-02", value: 20 },
+    { date: "2021-03", value: 15 },
+  ])
+  .x({ scale: "time" })
+  .y({ scale: "linear" })
+  .add(chrt.xAxis())
+  .add(chrt.yAxis())
+  .add(chrt.line());
+```
+
+#### Multiple Scales
+
+```js
+Chrt()
+  .size(600, 400)
+  .x({ scale: "linear" })
+  .y({ name: "primary", scale: "linear" })
+  .y({ name: "secondary", scale: "log" })
+  .add(chrt.xAxis())
+  .add(chrt.yAxis())
+  .add(chrt.yAxis("secondary").orient("right"))
+  .add(chrt.line().data(data1).y("primary"))
+  .add(chrt.line().data(data2).y("secondary"));
+```
+
+#### Auto-updating Chart
+
+```js
+const chart = Chrt().size(600, 400).add(chrt.line());
+
+// Update data and redraw
+function updateChart(newData) {
+  chart.data(newData).update();
+}
 ```
